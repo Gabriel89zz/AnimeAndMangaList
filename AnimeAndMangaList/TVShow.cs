@@ -93,6 +93,5 @@ namespace AnimeAndMangaList
             MessageBox.Show("Your expense per month of subscriptions is: " + sumSubs + " MXN", "Total Cost of Subscriptions", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-
     }
 }
