@@ -1,16 +1,8 @@
 ﻿using ClosedXML.Excel;
-using iText.Layout.Font;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using Xceed.Words.NET;
 using Xceed.Document.NET;
-using System.Xml.Linq;
 
 namespace AnimeAndMangaList
 {
@@ -210,6 +202,54 @@ namespace AnimeAndMangaList
                 {
                     writer.WriteLine(manga.ToString());
                 }
+            }
+        }
+
+        public static void LoadMangaDataFromTextFile(string filePath, Manga[] mangas, ListView lstvData)
+        {
+            try
+            {
+                string[] lines = File.ReadAllLines(filePath);
+
+                foreach (string line in lines)
+                {
+                    string[] fields = line.Split('|');
+
+                    int emptyIndex = Array.FindIndex(mangas, m => m == null);
+
+                    if (emptyIndex == -1)
+                    {
+                        MessageBox.Show("The array is full. You need to delete some entries to add new ones.", "Array Full", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    mangas[emptyIndex] = new Manga(
+                        fields[0],
+                        fields[1],
+                        fields[2],
+                        DateTime.Parse(fields[3]),
+                        Convert.ToInt32(fields[4]),
+                        fields[5],
+                        Convert.ToInt32(fields[6]),
+                        Convert.ToDouble(fields[7])
+                    );
+
+                    ListViewItem item = new ListViewItem(mangas[emptyIndex].Title);
+                    item.SubItems.Add(mangas[emptyIndex].Author);
+                    item.SubItems.Add(mangas[emptyIndex].Genre);
+                    item.SubItems.Add(mangas[emptyIndex].ReleaseYear.ToShortDateString());
+                    item.SubItems.Add(mangas[emptyIndex].Volume.ToString());
+                    item.SubItems.Add(mangas[emptyIndex].Editorial);
+                    item.SubItems.Add(mangas[emptyIndex].Rating.ToString());
+
+                    lstvData.Items.Add(item);
+                }
+
+                MessageBox.Show("Data loaded successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred while loading data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

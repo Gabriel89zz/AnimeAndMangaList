@@ -230,5 +230,62 @@ namespace AnimeAndMangaList
                 }
             }
         }
+
+        public static void LoadAnimeDataFromTextFile(string filePath, Anime[,] animeMatriz, ListView lstvData)
+        {
+            int row, column;
+            try
+            {
+                string[] lines = File.ReadAllLines(filePath);
+
+                row = 0;
+                column = 0;
+                foreach (string line in lines)
+                {
+                    string[] fields = line.Split('|');
+
+                    if (row >= animeMatriz.GetLength(0) || column >= animeMatriz.GetLength(1))
+                    {
+                        MessageBox.Show("The matrix is full. You need to delete some entries to add new ones.", "Matrix Full", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    animeMatriz[row, column] = new Anime(
+                        fields[0],
+                        fields[1],
+                        fields[2],
+                        DateTime.Parse(fields[3]),
+                        Convert.ToInt32(fields[4]),
+                        fields[5],
+                        fields[6],
+                        Convert.ToInt32(fields[7])
+                    );
+
+                    ListViewItem item = new ListViewItem(animeMatriz[row, column].Title);
+                    item.SubItems.Add(animeMatriz[row, column].Author);
+                    item.SubItems.Add(animeMatriz[row, column].Genre);
+                    item.SubItems.Add(animeMatriz[row, column].ReleaseYear.ToShortDateString());
+                    item.SubItems.Add(animeMatriz[row, column].NumberOfSeasons.ToString());
+                    item.SubItems.Add(animeMatriz[row, column].ProductionStudio);
+                    item.SubItems.Add(animeMatriz[row, column].Platform.ToString());
+                    item.SubItems.Add(animeMatriz[row, column].Rating.ToString());
+
+                    lstvData.Items.Add(item);
+
+                    column++;
+                    if (column >= animeMatriz.GetLength(1))
+                    {
+                        row++;
+                        column = 0;
+                    }
+                }
+
+                MessageBox.Show("Data loaded successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred while loading data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }
