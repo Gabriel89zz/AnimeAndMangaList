@@ -4,13 +4,11 @@ namespace AnimeAndMangaList
     {
         Manga[] mangas;
         Anime[,] animeMatriz;
-        int index;
         int row;
         int column;
         public Form1()
         {
             InitializeComponent();
-            index = 0;
             mangas = new Manga[100];
             row = 0;
             column = 0;
@@ -362,7 +360,7 @@ namespace AnimeAndMangaList
             {
                 using (SaveFileDialog sfd = new SaveFileDialog())
                 {
-                    sfd.Filter = "JSON Files|*.json|XML Files|*.xml|Excel Files|*.xlsx|Word Files|*.docx|PDF Files|*.pdf|Text Files|*.txt";
+                    sfd.Filter = "JSON Files|*.json|XML Files|*.xml|Excel Files|*.xlsx|Word Files|*.docx|Text Files|*.txt";
                     sfd.Title = "Save an Export File";
                     sfd.FileName = "ExportedData";
 
@@ -385,9 +383,6 @@ namespace AnimeAndMangaList
                             case ".docx":
                                 Manga.ExportMangaToWord(filePath,mangas);
                                 break;
-                            //case ".pdf":
-                            //    ExportMangaToPdf(filePath);
-                            //    break;
                             case ".txt":
                                 Manga.ExportMangaToTxt(filePath,mangas);
                                 break;
@@ -405,7 +400,7 @@ namespace AnimeAndMangaList
             {
                 using (SaveFileDialog sfd = new SaveFileDialog())
                 {
-                    sfd.Filter = "JSON Files|*.json|XML Files|*.xml|Excel Files|*.xlsx|Word Files|*.docx|PDF Files|*.pdf|Text Files|*.txt";
+                    sfd.Filter = "JSON Files|*.json|XML Files|*.xml|Excel Files|*.xlsx|Word Files|*.docx|Text Files|*.txt";
                     sfd.Title = "Save an Export File";
                     sfd.FileName = "ExportedData";
 
@@ -431,9 +426,6 @@ namespace AnimeAndMangaList
                             case ".txt":
                                 Anime.ExportAnimeToTxt(filePath, animeMatriz);
                                 break;
-                            //case ".pdf":
-                            //    ExportAnimeToPdf(filePath);
-                            //    break;
                             default:
                                 MessageBox.Show("Unsupported file format selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 break;

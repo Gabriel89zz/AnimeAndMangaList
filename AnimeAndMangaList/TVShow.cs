@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace AnimeAndMangaList
 {
     internal class TVShow
@@ -55,7 +49,7 @@ namespace AnimeAndMangaList
                 {
                     Anime anime = animes[row, column];
 
-                    if (anime != null) 
+                    if (anime != null)
                     {
                         string platform = anime.Platform;
                         double cost = 0;
@@ -92,6 +86,7 @@ namespace AnimeAndMangaList
 
             MessageBox.Show("Your expense per month of subscriptions is: " + sumSubs + " MXN", "Total Cost of Subscriptions", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
 
     }
 }
