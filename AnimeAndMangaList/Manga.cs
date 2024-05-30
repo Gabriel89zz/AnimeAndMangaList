@@ -3,13 +3,13 @@ using Newtonsoft.Json;
 using System.Xml;
 using Xceed.Words.NET;
 using Xceed.Document.NET;
+using Microsoft.DotNet.PlatformAbstractions;
 
 namespace AnimeAndMangaList
 {
     //CLASE,HERENCIA E INTERFAZ
     internal class Manga : Book, IJapaneseWorks
     {
-        //PROPIEDAD DE ESCRITURA Y LECTURA
         private string title;
         public string Title
         {
@@ -18,7 +18,7 @@ namespace AnimeAndMangaList
         }
 
         //PROPIEADAD DE SOLO LECTURA
-        private readonly string author;
+        private string author;
         public string Author
         {
             get { return author; }
@@ -35,6 +35,7 @@ namespace AnimeAndMangaList
         public DateTime ReleaseYear
         {
             get { return releaseyear; }
+            set { releaseyear = value; }
         }
 
         private int rating;
@@ -69,6 +70,48 @@ namespace AnimeAndMangaList
         {
             return "Title: "+title+", Author: "+author+ ", Genre: " + genre + ", Acquisition Date: " + releaseyear+", Volume: "+volume+", Editorial: "+editorial+", Price: "+price+", Rating:"+rating;
         }
+        //METODO  QUE REGRESA Y RECIBE
+        public static string GetStats(Manga[] mangas)
+        {
+            double sumPrice = 0;
+            foreach (Manga manga in mangas)
+            {
+                if (manga != null)
+                {
+                    sumPrice += manga.price;
+                }
+            }
+
+            int Kamite = 0;
+            int Panini = 0;
+            int Ivrea = 0;
+            int Norma = 0;
+
+            foreach (var manga in mangas)
+            {
+                if (manga != null)
+                {
+                    switch (manga.editorial)
+                    {
+                        case "Panini":
+                            Panini++;
+                            break;
+                        case "Norma":
+                            Norma++;
+                            break;
+                        case "Ivrea":
+                           Ivrea++;
+                            break;
+                        case "Kamite":
+                             Kamite++;
+                            break;
+                        default:
+                            continue;
+                    }
+                }
+            }
+            return "The ost of your collection of mangas: " + Math.Round(sumPrice, 2) + "\nMangas by editorial: Panini:" + Panini + "Norma: " + Norma + " Kamite: " + Kamite + " Ivrea: " + Ivrea;
+        }
 
         // METODO QUE REGRESA PERO NO RECIBE
         public static String[] GetMangaGenres()
@@ -77,61 +120,64 @@ namespace AnimeAndMangaList
             return MangaGenres;
         }
 
+        //METODO QUE RECIBE PERO NO REGRESA
         public static void ExportMangaToJson(string filePath, Manga[]mangas)
         {
-            List<Manga> mangaList = mangas.Where(m => m != null).ToList();
-            string json = JsonConvert.SerializeObject(mangaList, Newtonsoft.Json.Formatting.Indented);
+            Manga[] filteredMangas = Array.FindAll(mangas, m => m != null);
+            string json = JsonConvert.SerializeObject(filteredMangas, Newtonsoft.Json.Formatting.Indented);
             File.WriteAllText(filePath, json);
         }
 
         public static void ExportMangaToXml(string filePath, Manga[] mangas)
         {
-            List<Manga> mangaList = mangas.Where(m => m != null).ToList();
             XmlDocument doc = new XmlDocument();
             XmlElement root = doc.CreateElement("Mangas");
             doc.AppendChild(root);
 
-            foreach (var manga in mangaList)
+            foreach (var manga in mangas.Where(m => m != null))
             {
                 XmlElement mangaElement = doc.CreateElement("Manga");
 
                 XmlElement titleElement = doc.CreateElement("Title");
-                titleElement.InnerText = manga.Title;
+                titleElement.InnerText = manga.title;
                 mangaElement.AppendChild(titleElement);
 
                 XmlElement authorElement = doc.CreateElement("Author");
-                authorElement.InnerText = manga.Author;
+                authorElement.InnerText = manga.author;
                 mangaElement.AppendChild(authorElement);
 
                 XmlElement genreElement = doc.CreateElement("Genre");
-                genreElement.InnerText = manga.Genre;
+                genreElement.InnerText = manga.genre;
                 mangaElement.AppendChild(genreElement);
 
                 XmlElement releaseYearElement = doc.CreateElement("ReleaseYear");
-                releaseYearElement.InnerText = manga.ReleaseYear.ToShortDateString();
+                releaseYearElement.InnerText = manga.releaseyear.ToShortDateString();
                 mangaElement.AppendChild(releaseYearElement);
 
                 XmlElement volumeElement = doc.CreateElement("Volume");
-                volumeElement.InnerText = manga.Volume.ToString();
+                volumeElement.InnerText = manga.volume.ToString();
                 mangaElement.AppendChild(volumeElement);
 
                 XmlElement editorialElement = doc.CreateElement("Editorial");
-                editorialElement.InnerText = manga.Editorial;
+                editorialElement.InnerText = manga.editorial;
                 mangaElement.AppendChild(editorialElement);
 
                 XmlElement ratingElement = doc.CreateElement("Rating");
-                ratingElement.InnerText = manga.Rating.ToString();
+                ratingElement.InnerText = manga.rating.ToString();
                 mangaElement.AppendChild(ratingElement);
+
+                XmlElement priceElement = doc.CreateElement("Price");
+                priceElement.InnerText = manga.price.ToString();
+                mangaElement.AppendChild(priceElement);
 
                 root.AppendChild(mangaElement);
             }
 
             doc.Save(filePath);
-        }
 
+        }
         public static void ExportMangaToExcel(string filePath, Manga[] mangas)
         {
-            List<Manga> mangaList = mangas.Where(m => m != null).ToList();
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Mangas");
@@ -143,30 +189,37 @@ namespace AnimeAndMangaList
                 worksheet.Cell(1, 5).Value = "Volume";
                 worksheet.Cell(1, 6).Value = "Editorial";
                 worksheet.Cell(1, 7).Value = "Rating";
+                worksheet.Cell(1, 8).Value = "Price";
 
-                for (int i = 0; i < mangaList.Count; i++)
+                int rowIndex = 2;
+
+                foreach (var manga in mangas.Where(m => m != null))
                 {
-                    var manga = mangaList[i];
-                    worksheet.Cell(i + 2, 1).Value = manga.Title;
-                    worksheet.Cell(i + 2, 2).Value = manga.Author;
-                    worksheet.Cell(i + 2, 3).Value = manga.Genre;
-                    worksheet.Cell(i + 2, 4).Value = manga.ReleaseYear.ToShortDateString();
-                    worksheet.Cell(i + 2, 5).Value = manga.Volume;
-                    worksheet.Cell(i + 2, 6).Value = manga.Editorial;
-                    worksheet.Cell(i + 2, 7).Value = manga.Rating;
+                    worksheet.Cell(rowIndex, 1).Value = manga.title;
+                    worksheet.Cell(rowIndex, 2).Value = manga.author;
+                    worksheet.Cell(rowIndex, 3).Value = manga.genre;
+                    worksheet.Cell(rowIndex, 4).Value = manga.releaseyear.ToShortDateString();
+                    worksheet.Cell(rowIndex, 5).Value = manga.volume;
+                    worksheet.Cell(rowIndex, 6).Value = manga.editorial;
+                    worksheet.Cell(rowIndex, 7).Value = manga.rating;
+                    worksheet.Cell(rowIndex, 8).Value = manga.price;
+
+                    rowIndex++;
                 }
 
                 workbook.SaveAs(filePath);
             }
         }
 
+
         public static void ExportMangaToWord(string filePath, Manga[] mangas)
         {
-            List<Manga> mangaList = mangas.Where(m => m != null).ToList();
             using (var document = DocX.Create(filePath))
             {
                 document.InsertParagraph("Manga List").FontSize(15).Bold().Alignment = Alignment.center;
-                var table = document.AddTable(mangaList.Count + 1, 7);
+
+                var mangaCount = mangas.Count(m => m != null);
+                var table = document.AddTable(mangaCount + 1, 8);
 
                 table.Rows[0].Cells[0].Paragraphs[0].Append("Title");
                 table.Rows[0].Cells[1].Paragraphs[0].Append("Author");
@@ -175,30 +228,33 @@ namespace AnimeAndMangaList
                 table.Rows[0].Cells[4].Paragraphs[0].Append("Volume");
                 table.Rows[0].Cells[5].Paragraphs[0].Append("Editorial");
                 table.Rows[0].Cells[6].Paragraphs[0].Append("Rating");
+                table.Rows[0].Cells[7].Paragraphs[0].Append("Price");
 
-                for (int i = 0; i < mangaList.Count; i++)
+                int rowIndex = 1;
+                foreach (var manga in mangas.Where(m => m != null))
                 {
-                    var manga = mangaList[i];
-                    table.Rows[i + 1].Cells[0].Paragraphs[0].Append(manga.Title);
-                    table.Rows[i + 1].Cells[1].Paragraphs[0].Append(manga.Author);
-                    table.Rows[i + 1].Cells[2].Paragraphs[0].Append(manga.Genre);
-                    table.Rows[i + 1].Cells[3].Paragraphs[0].Append(manga.ReleaseYear.ToShortDateString());
-                    table.Rows[i + 1].Cells[4].Paragraphs[0].Append(manga.Volume.ToString());
-                    table.Rows[i + 1].Cells[5].Paragraphs[0].Append(manga.Editorial);
-                    table.Rows[i + 1].Cells[6].Paragraphs[0].Append(manga.Rating.ToString());
+                    table.Rows[rowIndex].Cells[0].Paragraphs[0].Append(manga.title);
+                    table.Rows[rowIndex].Cells[1].Paragraphs[0].Append(manga.author);
+                    table.Rows[rowIndex].Cells[2].Paragraphs[0].Append(manga.genre);
+                    table.Rows[rowIndex].Cells[3].Paragraphs[0].Append(manga.releaseyear.ToShortDateString());
+                    table.Rows[rowIndex].Cells[4].Paragraphs[0].Append(manga.volume.ToString());
+                    table.Rows[rowIndex].Cells[5].Paragraphs[0].Append(manga.editorial);
+                    table.Rows[rowIndex].Cells[6].Paragraphs[0].Append(manga.rating.ToString());
+                    table.Rows[rowIndex].Cells[7].Paragraphs[0].Append(manga.price.ToString());
+                    rowIndex++;
                 }
 
                 document.InsertTable(table);
                 document.Save();
             }
+
         }
 
         public static void ExportMangaToTxt(string filePath, Manga[] mangas)
         {
-            List<Manga> mangaList = mangas.Where(m => m != null).ToList();
             using (StreamWriter writer = new StreamWriter(filePath))
             {
-                foreach (var manga in mangaList)
+                foreach (var manga in mangas.Where(m => m != null))
                 {
                     writer.WriteLine(manga.ToString());
                 }
@@ -234,13 +290,14 @@ namespace AnimeAndMangaList
                         Convert.ToDouble(fields[7])
                     );
 
-                    ListViewItem item = new ListViewItem(mangas[emptyIndex].Title);
-                    item.SubItems.Add(mangas[emptyIndex].Author);
-                    item.SubItems.Add(mangas[emptyIndex].Genre);
-                    item.SubItems.Add(mangas[emptyIndex].ReleaseYear.ToShortDateString());
-                    item.SubItems.Add(mangas[emptyIndex].Volume.ToString());
-                    item.SubItems.Add(mangas[emptyIndex].Editorial);
-                    item.SubItems.Add(mangas[emptyIndex].Rating.ToString());
+                    ListViewItem item = new ListViewItem(mangas[emptyIndex].title);
+                    item.SubItems.Add(mangas[emptyIndex].author);
+                    item.SubItems.Add(mangas[emptyIndex].genre);
+                    item.SubItems.Add(mangas[emptyIndex].releaseyear.ToShortDateString());
+                    item.SubItems.Add(mangas[emptyIndex].volume.ToString());
+                    item.SubItems.Add(mangas[emptyIndex].editorial);
+                    item.SubItems.Add(mangas[emptyIndex].rating.ToString());
+                    item.SubItems.Add(mangas[emptyIndex].price.ToString());
 
                     lstvData.Items.Add(item);
                 }

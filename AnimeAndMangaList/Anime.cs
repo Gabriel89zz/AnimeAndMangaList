@@ -32,6 +32,7 @@ namespace AnimeAndMangaList
         public DateTime ReleaseYear
         {
             get { return releaseyear; }
+            set { releaseyear = value; }
         }
 
         private int rating;
@@ -64,75 +65,98 @@ namespace AnimeAndMangaList
             return "Title: " + title + ", Author: " + author + ", Genre: " + genre + ", Release Date: " + releaseyear + ", Number of Seasons: " + numberofseasons + ", Production Studio: " + productionstudio + ", Platform: " + platform + ", Rating:" + rating ;
         }
 
-        public static void ExportAnimeToJson(string filePath,Anime[,]animeMatriz)
+        public static string GetStatsAnime(Anime[] animes)
         {
-            List<Anime> animeList = new List<Anime>();
-            foreach (var anime in animeMatriz)
+            int crunchyroll = 0;
+            int netflix = 0;
+            int disneyplus = 0;
+            int primevideo = 0;
+            int sumSubs = 0;
+            foreach (var anime in animes)
             {
                 if (anime != null)
                 {
-                    animeList.Add(anime);
+                    switch (anime.platform)
+                    {
+                        case "Crunchyroll":
+                            crunchyroll=145;
+                            break;
+                        case "Netflix":
+                            netflix=219;
+                            break;
+                        case "Disney Plus":
+                            disneyplus=200;
+                            break;
+                        case "Prime Video":
+                            primevideo=99;
+                            break;
+                        default:
+                            continue;
+                    }
                 }
             }
-            string json = JsonConvert.SerializeObject(animeList, Newtonsoft.Json.Formatting.Indented);
+            sumSubs = crunchyroll + disneyplus + netflix + primevideo;
+            return "Your monthly subscription cost is: " + sumSubs+" MXN";
+        }
+
+
+        public static void ExportAnimeToJson(string filePath, Anime[] animes)
+        {
+            Anime[] filteredMangas = Array.FindAll(animes, m => m != null);
+            string json = JsonConvert.SerializeObject(filteredMangas, Newtonsoft.Json.Formatting.Indented);
             File.WriteAllText(filePath, json);
         }
 
-        public static void ExportAnimeToXml(string filePath, Anime[,] animeMatriz)
+        public static void ExportAnimeToXml(string filePath, Anime[] animes)
         {
             XmlDocument doc = new XmlDocument();
             XmlElement root = doc.CreateElement("Animes");
             doc.AppendChild(root);
 
-            for (int row = 0; row < animeMatriz.GetLength(0); row++)
+            foreach (var anime in animes.Where(m => m != null))
             {
-                for (int col = 0; col < animeMatriz.GetLength(1); col++)
-                {
-                    if (animeMatriz[row, col] != null)
-                    {
-                        XmlElement animeElement = doc.CreateElement("Anime");
+                XmlElement animeElement = doc.CreateElement("Manga");
 
-                        XmlElement titleElement = doc.CreateElement("Title");
-                        titleElement.InnerText = animeMatriz[row, col].Title;
-                        animeElement.AppendChild(titleElement);
+                XmlElement titleElement = doc.CreateElement("Title");
+                titleElement.InnerText = anime.title;
+                animeElement.AppendChild(titleElement);
 
-                        XmlElement authorElement = doc.CreateElement("Author");
-                        authorElement.InnerText = animeMatriz[row, col].Author;
-                        animeElement.AppendChild(authorElement);
+                XmlElement authorElement = doc.CreateElement("Author");
+                authorElement.InnerText = anime.author;
+                animeElement.AppendChild(authorElement);
 
-                        XmlElement genreElement = doc.CreateElement("Genre");
-                        genreElement.InnerText = animeMatriz[row, col].Genre;
-                        animeElement.AppendChild(genreElement);
+                XmlElement genreElement = doc.CreateElement("Genre");
+                genreElement.InnerText = anime.genre;
+                animeElement.AppendChild(genreElement);
 
-                        XmlElement releaseYearElement = doc.CreateElement("ReleaseYear");
-                        releaseYearElement.InnerText = animeMatriz[row, col].ReleaseYear.ToShortDateString();
-                        animeElement.AppendChild(releaseYearElement);
+                XmlElement releaseYearElement = doc.CreateElement("ReleaseYear");
+                releaseYearElement.InnerText = anime.releaseyear.ToShortDateString();
+                animeElement.AppendChild(releaseYearElement);
 
-                        XmlElement numberOfSeasonsElement = doc.CreateElement("NumberOfSeasons");
-                        numberOfSeasonsElement.InnerText = animeMatriz[row, col].NumberOfSeasons.ToString();
-                        animeElement.AppendChild(numberOfSeasonsElement);
+                XmlElement numberOfSeasonsElements = doc.CreateElement("NumberofChapters");
+                numberOfSeasonsElements.InnerText = anime.numberofseasons.ToString();
+                animeElement.AppendChild(numberOfSeasonsElements);
 
-                        XmlElement platformElement = doc.CreateElement("Platform");
-                        platformElement.InnerText = animeMatriz[row, col].Platform;
-                        animeElement.AppendChild(platformElement);
+                XmlElement editorialElement = doc.CreateElement("Platform");
+                editorialElement.InnerText = anime.platform;
+                animeElement.AppendChild(editorialElement);
 
-                        XmlElement productionStudioElement = doc.CreateElement("ProductionStudio");
-                        productionStudioElement.InnerText = animeMatriz[row, col].ProductionStudio;
-                        animeElement.AppendChild(productionStudioElement);
+                XmlElement ratingElement = doc.CreateElement("Rating");
+                ratingElement.InnerText = anime.rating.ToString();
+                animeElement.AppendChild(ratingElement);
 
-                        XmlElement ratingElement = doc.CreateElement("Rating");
-                        ratingElement.InnerText = animeMatriz[row, col].Rating.ToString();
-                        animeElement.AppendChild(ratingElement);
+                XmlElement priceElement = doc.CreateElement("ProductionStudio");
+                priceElement.InnerText = anime.productionstudio.ToString();
+                animeElement.AppendChild(priceElement);
 
-                        root.AppendChild(animeElement);
-                    }
-                }
+                root.AppendChild(animeElement);
             }
 
             doc.Save(filePath);
+
         }
 
-        public static void ExportAnimeToExcel(string filePath, Anime[,] animeMatriz)
+        public static void ExportAnimeToExcel(string filePath, Anime[] animes)
         {
             using (var workbook = new XLWorkbook())
             {
@@ -142,29 +166,25 @@ namespace AnimeAndMangaList
                 worksheet.Cell(1, 2).Value = "Author";
                 worksheet.Cell(1, 3).Value = "Genre";
                 worksheet.Cell(1, 4).Value = "ReleaseYear";
-                worksheet.Cell(1, 5).Value = "NumberOfSeasons";
+                worksheet.Cell(1, 5).Value = "Number of Chapters";
                 worksheet.Cell(1, 6).Value = "Platform";
-                worksheet.Cell(1, 7).Value = "ProductionStudio";
-                worksheet.Cell(1, 8).Value = "Rating";
+                worksheet.Cell(1, 7).Value = "Rating";
+                worksheet.Cell(1, 8).Value = "Production Studio";
 
-                int row = 2;
-                for (int i = 0; i < animeMatriz.GetLength(0); i++)
+                int rowIndex = 2;
+
+                foreach (var anime in animes.Where(m => m != null))
                 {
-                    for (int j = 0; j < animeMatriz.GetLength(1); j++)
-                    {
-                        if (animeMatriz[i, j] != null)
-                        {
-                            worksheet.Cell(row, 1).Value = animeMatriz[i, j].Title;
-                            worksheet.Cell(row, 2).Value = animeMatriz[i, j].Author;
-                            worksheet.Cell(row, 3).Value = animeMatriz[i, j].Genre;
-                            worksheet.Cell(row, 4).Value = animeMatriz[i, j].ReleaseYear.ToShortDateString();
-                            worksheet.Cell(row, 5).Value = animeMatriz[i, j].NumberOfSeasons;
-                            worksheet.Cell(row, 6).Value = animeMatriz[i, j].Platform;
-                            worksheet.Cell(row, 7).Value = animeMatriz[i, j].ProductionStudio;
-                            worksheet.Cell(row, 8).Value = animeMatriz[i, j].Rating.ToString();
-                            row++;
-                        }
-                    }
+                    worksheet.Cell(rowIndex, 1).Value = anime.title;
+                    worksheet.Cell(rowIndex, 2).Value = anime.author;
+                    worksheet.Cell(rowIndex, 3).Value = anime.genre;
+                    worksheet.Cell(rowIndex, 4).Value = anime.releaseyear.ToShortDateString();
+                    worksheet.Cell(rowIndex, 5).Value = anime.numberofseasons;
+                    worksheet.Cell(rowIndex, 6).Value = anime.platform;
+                    worksheet.Cell(rowIndex, 7).Value = anime.rating;
+                    worksheet.Cell(rowIndex, 8).Value = anime.productionstudio;
+
+                    rowIndex++;
                 }
 
                 workbook.SaveAs(filePath);
@@ -172,85 +192,74 @@ namespace AnimeAndMangaList
         }
 
 
-        public static void ExportAnimeToWord(string filePath, Anime[,] animeMatriz)
+        public static void ExportAnimeToWord(string filePath, Anime[] animes)
         {
             using (var document = DocX.Create(filePath))
             {
                 document.InsertParagraph("Anime List").FontSize(15).Bold().Alignment = Alignment.center;
-                var table = document.AddTable(1, 8);
+
+                var animeCount = animes.Count(m => m != null);
+                var table = document.AddTable(animeCount + 1, 8);
 
                 table.Rows[0].Cells[0].Paragraphs[0].Append("Title");
                 table.Rows[0].Cells[1].Paragraphs[0].Append("Author");
                 table.Rows[0].Cells[2].Paragraphs[0].Append("Genre");
                 table.Rows[0].Cells[3].Paragraphs[0].Append("ReleaseYear");
-                table.Rows[0].Cells[4].Paragraphs[0].Append("NumberOfSeasons");
+                table.Rows[0].Cells[4].Paragraphs[0].Append("Number of Chapters");
                 table.Rows[0].Cells[5].Paragraphs[0].Append("Platform");
-                table.Rows[0].Cells[6].Paragraphs[0].Append("ProductionStudio");
-                table.Rows[0].Cells[7].Paragraphs[0].Append("Rating");
+                table.Rows[0].Cells[6].Paragraphs[0].Append("Rating");
+                table.Rows[0].Cells[7].Paragraphs[0].Append("Production Studio");
 
-                int row = 1;
-                for (int i = 0; i < animeMatriz.GetLength(0); i++)
+                int rowIndex = 1;
+                foreach (var manga in animes.Where(m => m != null))
                 {
-                    for (int j = 0; j < animeMatriz.GetLength(1); j++)
-                    {
-                        if (animeMatriz[i, j] != null)
-                        {
-                            table.InsertRow();
-                            table.Rows[row].Cells[0].Paragraphs[0].Append(animeMatriz[i, j].Title);
-                            table.Rows[row].Cells[1].Paragraphs[0].Append(animeMatriz[i, j].Author);
-                            table.Rows[row].Cells[2].Paragraphs[0].Append(animeMatriz[i, j].Genre);
-                            table.Rows[row].Cells[3].Paragraphs[0].Append(animeMatriz[i, j].ReleaseYear.ToShortDateString());
-                            table.Rows[row].Cells[4].Paragraphs[0].Append(animeMatriz[i, j].NumberOfSeasons.ToString());
-                            table.Rows[row].Cells[5].Paragraphs[0].Append(animeMatriz[i, j].Platform);
-                            table.Rows[row].Cells[6].Paragraphs[0].Append(animeMatriz[i, j].ProductionStudio);
-                            table.Rows[row].Cells[7].Paragraphs[0].Append(animeMatriz[i, j].Rating.ToString());
-                            row++;
-                        }
-                    }
+                    table.Rows[rowIndex].Cells[0].Paragraphs[0].Append(manga.title);
+                    table.Rows[rowIndex].Cells[1].Paragraphs[0].Append(manga.author);
+                    table.Rows[rowIndex].Cells[2].Paragraphs[0].Append(manga.genre);
+                    table.Rows[rowIndex].Cells[3].Paragraphs[0].Append(manga.releaseyear.ToShortDateString());
+                    table.Rows[rowIndex].Cells[4].Paragraphs[0].Append(manga.numberofseasons.ToString());
+                    table.Rows[rowIndex].Cells[5].Paragraphs[0].Append(manga.platform);
+                    table.Rows[rowIndex].Cells[6].Paragraphs[0].Append(manga.rating.ToString());
+                    table.Rows[rowIndex].Cells[7].Paragraphs[0].Append(manga.productionstudio);
+                    rowIndex++;
                 }
 
                 document.InsertTable(table);
                 document.Save();
             }
+
         }
 
-        public static void ExportAnimeToTxt(string filePath, Anime[,] animeMatriz)
+        public static void ExportAnimeToTxt(string filePath, Anime[] animes)
         {
             using (StreamWriter writer = new StreamWriter(filePath))
             {
-                for (int i = 0; i < animeMatriz.GetLength(0); i++)
+                foreach (var anime in animes.Where(m => m != null))
                 {
-                    for (int j = 0; j < animeMatriz.GetLength(1); j++)
-                    {
-                        if (animeMatriz[i, j] != null)
-                        {
-                            writer.WriteLine(animeMatriz[i, j].ToString());
-                        }
-                    }
+                    writer.WriteLine(anime.ToString());
                 }
             }
         }
 
-        public static void LoadAnimeDataFromTextFile(string filePath, Anime[,] animeMatriz, ListView lstvData)
+        public static void LoadAnimeDataFromTextFile(string filePath, Anime[] animes, ListView lstvData)
         {
-            int row, column;
             try
             {
                 string[] lines = File.ReadAllLines(filePath);
 
-                row = 0;
-                column = 0;
                 foreach (string line in lines)
                 {
                     string[] fields = line.Split('|');
 
-                    if (row >= animeMatriz.GetLength(0) || column >= animeMatriz.GetLength(1))
+                    int emptyIndex = Array.FindIndex(animes, m => m == null);
+
+                    if (emptyIndex == -1)
                     {
-                        MessageBox.Show("The matrix is full. You need to delete some entries to add new ones.", "Matrix Full", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("The array is full. You need to delete some entries to add new ones.", "Array Full", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
 
-                    animeMatriz[row, column] = new Anime(
+                    animes[emptyIndex] = new Anime(
                         fields[0],
                         fields[1],
                         fields[2],
@@ -261,23 +270,16 @@ namespace AnimeAndMangaList
                         Convert.ToInt32(fields[7])
                     );
 
-                    ListViewItem item = new ListViewItem(animeMatriz[row, column].Title);
-                    item.SubItems.Add(animeMatriz[row, column].Author);
-                    item.SubItems.Add(animeMatriz[row, column].Genre);
-                    item.SubItems.Add(animeMatriz[row, column].ReleaseYear.ToShortDateString());
-                    item.SubItems.Add(animeMatriz[row, column].NumberOfSeasons.ToString());
-                    item.SubItems.Add(animeMatriz[row, column].ProductionStudio);
-                    item.SubItems.Add(animeMatriz[row, column].Platform.ToString());
-                    item.SubItems.Add(animeMatriz[row, column].Rating.ToString());
+                    ListViewItem item = new ListViewItem(animes[emptyIndex].title);
+                    item.SubItems.Add(animes[emptyIndex].author);
+                    item.SubItems.Add(animes[emptyIndex].genre);
+                    item.SubItems.Add(animes[emptyIndex].releaseyear.ToShortDateString());
+                    item.SubItems.Add(animes[emptyIndex].numberofseasons.ToString());
+                    item.SubItems.Add(animes[emptyIndex].productionstudio);
+                    item.SubItems.Add(animes[emptyIndex].platform);
+                    item.SubItems.Add(animes[emptyIndex].rating.ToString());
 
                     lstvData.Items.Add(item);
-
-                    column++;
-                    if (column >= animeMatriz.GetLength(1))
-                    {
-                        row++;
-                        column = 0;
-                    }
                 }
 
                 MessageBox.Show("Data loaded successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);

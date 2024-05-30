@@ -1,6 +1,6 @@
 ﻿namespace AnimeAndMangaList
 {
-    partial class Form1
+    partial class FrmManga
     {
         /// <summary>
         ///  Required designer variable.
@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmManga));
             txtTitle = new TextBox();
             txtAuthor = new TextBox();
             txtChapters = new TextBox();
@@ -41,21 +42,26 @@
             lblPrice = new Label();
             txtPrice = new TextBox();
             lblRating = new Label();
-            btnCalculateCost = new Button();
-            btnAddManga = new Button();
-            btnAddAnime = new Button();
-            lstvData = new ListView();
+            btnGetStats = new Button();
+            lstvDataManga = new ListView();
             dtpDate = new DateTimePicker();
             nudRating = new NumericUpDown();
-            btnSaveAnime = new Button();
             btnDeleteManga = new Button();
             cbEditorial = new ComboBox();
-            btnExport = new Button();
+            btnExportManga = new Button();
             cbGenre = new ComboBox();
             txtReview = new TextBox();
             lblAddReview = new Label();
-            btnSaveReview = new Button();
+            btnSaveReviewManga = new Button();
             btnLoadData = new Button();
+            columnHeader1 = new ColumnHeader();
+            columnHeader2 = new ColumnHeader();
+            columnHeader3 = new ColumnHeader();
+            columnHeader4 = new ColumnHeader();
+            columnHeader5 = new ColumnHeader();
+            columnHeader6 = new ColumnHeader();
+            columnHeader7 = new ColumnHeader();
+            columnHeader8 = new ColumnHeader();
             ((System.ComponentModel.ISupportInitialize)nudRating).BeginInit();
             SuspendLayout();
             // 
@@ -200,71 +206,35 @@
             lblRating.TabIndex = 19;
             lblRating.Text = "Rating:";
             // 
-            // btnCalculateCost
+            // btnGetStats
             // 
-            btnCalculateCost.BackColor = SystemColors.ActiveCaptionText;
-            btnCalculateCost.Cursor = Cursors.Hand;
-            btnCalculateCost.FlatAppearance.BorderSize = 0;
-            btnCalculateCost.FlatAppearance.MouseOverBackColor = Color.DarkOrchid;
-            btnCalculateCost.FlatStyle = FlatStyle.Flat;
-            btnCalculateCost.Font = new Font("Microsoft Tai Le", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnCalculateCost.ForeColor = SystemColors.ControlLightLight;
-            btnCalculateCost.Location = new Point(1086, 216);
-            btnCalculateCost.Margin = new Padding(4);
-            btnCalculateCost.Name = "btnCalculateCost";
-            btnCalculateCost.Size = new Size(97, 48);
-            btnCalculateCost.TabIndex = 20;
-            btnCalculateCost.Text = "Calculate Cost";
-            btnCalculateCost.UseVisualStyleBackColor = false;
-            btnCalculateCost.Click += btnCalculateCost_Click;
+            btnGetStats.BackColor = SystemColors.ActiveCaptionText;
+            btnGetStats.Cursor = Cursors.Hand;
+            btnGetStats.FlatAppearance.BorderSize = 0;
+            btnGetStats.FlatAppearance.MouseOverBackColor = Color.DarkOrchid;
+            btnGetStats.FlatStyle = FlatStyle.Flat;
+            btnGetStats.Font = new Font("Microsoft Tai Le", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnGetStats.ForeColor = SystemColors.ControlLightLight;
+            btnGetStats.Location = new Point(1086, 216);
+            btnGetStats.Margin = new Padding(4);
+            btnGetStats.Name = "btnGetStats";
+            btnGetStats.Size = new Size(97, 48);
+            btnGetStats.TabIndex = 20;
+            btnGetStats.Text = "Get Stats";
+            btnGetStats.UseVisualStyleBackColor = false;
+            btnGetStats.Click += btnGetStats_Click;
             // 
-            // btnAddManga
+            // lstvDataManga
             // 
-            btnAddManga.BackColor = Color.DarkOrchid;
-            btnAddManga.Cursor = Cursors.Hand;
-            btnAddManga.FlatAppearance.BorderSize = 0;
-            btnAddManga.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            btnAddManga.FlatAppearance.MouseOverBackColor = SystemColors.ActiveCaptionText;
-            btnAddManga.FlatStyle = FlatStyle.Flat;
-            btnAddManga.Font = new Font("Nirmala UI", 12F, FontStyle.Bold);
-            btnAddManga.ForeColor = SystemColors.ButtonFace;
-            btnAddManga.Location = new Point(317, 14);
-            btnAddManga.Margin = new Padding(4);
-            btnAddManga.Name = "btnAddManga";
-            btnAddManga.Size = new Size(117, 44);
-            btnAddManga.TabIndex = 21;
-            btnAddManga.Text = "Add Manga";
-            btnAddManga.UseVisualStyleBackColor = false;
-            btnAddManga.Click += btnAddManga_Click;
-            // 
-            // btnAddAnime
-            // 
-            btnAddAnime.BackColor = Color.DarkOrchid;
-            btnAddAnime.Cursor = Cursors.Hand;
-            btnAddAnime.FlatAppearance.BorderSize = 0;
-            btnAddAnime.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            btnAddAnime.FlatAppearance.MouseOverBackColor = SystemColors.ActiveCaptionText;
-            btnAddAnime.FlatStyle = FlatStyle.Flat;
-            btnAddAnime.Font = new Font("Nirmala UI", 12F, FontStyle.Bold);
-            btnAddAnime.ForeColor = SystemColors.ButtonFace;
-            btnAddAnime.Location = new Point(809, 14);
-            btnAddAnime.Margin = new Padding(4);
-            btnAddAnime.Name = "btnAddAnime";
-            btnAddAnime.Size = new Size(117, 44);
-            btnAddAnime.TabIndex = 22;
-            btnAddAnime.Text = "Add Anime";
-            btnAddAnime.UseVisualStyleBackColor = false;
-            btnAddAnime.Click += btnAddAnime_Click;
-            // 
-            // lstvData
-            // 
-            lstvData.FullRowSelect = true;
-            lstvData.Location = new Point(364, 291);
-            lstvData.Margin = new Padding(4, 3, 4, 3);
-            lstvData.Name = "lstvData";
-            lstvData.Size = new Size(856, 267);
-            lstvData.TabIndex = 23;
-            lstvData.UseCompatibleStateImageBehavior = false;
+            lstvDataManga.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3, columnHeader4, columnHeader5, columnHeader6, columnHeader7, columnHeader8 });
+            lstvDataManga.FullRowSelect = true;
+            lstvDataManga.Location = new Point(364, 291);
+            lstvDataManga.Margin = new Padding(4, 3, 4, 3);
+            lstvDataManga.Name = "lstvDataManga";
+            lstvDataManga.Size = new Size(856, 267);
+            lstvDataManga.TabIndex = 23;
+            lstvDataManga.UseCompatibleStateImageBehavior = false;
+            lstvDataManga.View = View.Details;
             // 
             // dtpDate
             // 
@@ -285,24 +255,6 @@
             nudRating.Name = "nudRating";
             nudRating.Size = new Size(45, 26);
             nudRating.TabIndex = 27;
-            // 
-            // btnSaveAnime
-            // 
-            btnSaveAnime.BackColor = SystemColors.ActiveCaptionText;
-            btnSaveAnime.Cursor = Cursors.Hand;
-            btnSaveAnime.FlatAppearance.BorderColor = SystemColors.WindowFrame;
-            btnSaveAnime.FlatAppearance.BorderSize = 0;
-            btnSaveAnime.FlatAppearance.MouseOverBackColor = Color.DarkOrchid;
-            btnSaveAnime.FlatStyle = FlatStyle.Flat;
-            btnSaveAnime.ForeColor = SystemColors.ControlLightLight;
-            btnSaveAnime.Location = new Point(1086, 77);
-            btnSaveAnime.Margin = new Padding(4);
-            btnSaveAnime.Name = "btnSaveAnime";
-            btnSaveAnime.Size = new Size(97, 44);
-            btnSaveAnime.TabIndex = 28;
-            btnSaveAnime.Text = "Save";
-            btnSaveAnime.UseVisualStyleBackColor = false;
-            btnSaveAnime.Click += btnSaveAnime_Click;
             // 
             // btnDeleteManga
             // 
@@ -332,22 +284,22 @@
             cbEditorial.Size = new Size(121, 27);
             cbEditorial.TabIndex = 30;
             // 
-            // btnExport
+            // btnExportManga
             // 
-            btnExport.BackColor = SystemColors.ActiveCaptionText;
-            btnExport.Cursor = Cursors.Hand;
-            btnExport.FlatAppearance.BorderSize = 0;
-            btnExport.FlatAppearance.MouseOverBackColor = Color.DarkOrchid;
-            btnExport.FlatStyle = FlatStyle.Flat;
-            btnExport.ForeColor = SystemColors.ButtonHighlight;
-            btnExport.Location = new Point(1123, 570);
-            btnExport.Margin = new Padding(3, 4, 3, 4);
-            btnExport.Name = "btnExport";
-            btnExport.Size = new Size(86, 35);
-            btnExport.TabIndex = 32;
-            btnExport.Text = "Export To";
-            btnExport.UseVisualStyleBackColor = false;
-            btnExport.Click += btnExport_Click;
+            btnExportManga.BackColor = SystemColors.ActiveCaptionText;
+            btnExportManga.Cursor = Cursors.Hand;
+            btnExportManga.FlatAppearance.BorderSize = 0;
+            btnExportManga.FlatAppearance.MouseOverBackColor = Color.DarkOrchid;
+            btnExportManga.FlatStyle = FlatStyle.Flat;
+            btnExportManga.ForeColor = SystemColors.ButtonHighlight;
+            btnExportManga.Location = new Point(1135, 571);
+            btnExportManga.Margin = new Padding(3, 4, 3, 4);
+            btnExportManga.Name = "btnExportManga";
+            btnExportManga.Size = new Size(86, 35);
+            btnExportManga.TabIndex = 32;
+            btnExportManga.Text = "Export To";
+            btnExportManga.UseVisualStyleBackColor = false;
+            btnExportManga.Click += btnExport_Click;
             // 
             // cbGenre
             // 
@@ -380,22 +332,22 @@
             lblAddReview.TabIndex = 35;
             lblAddReview.Text = "Add a review";
             // 
-            // btnSaveReview
+            // btnSaveReviewManga
             // 
-            btnSaveReview.BackColor = SystemColors.ActiveCaptionText;
-            btnSaveReview.Cursor = Cursors.Hand;
-            btnSaveReview.FlatAppearance.BorderSize = 0;
-            btnSaveReview.FlatAppearance.MouseOverBackColor = Color.DarkOrchid;
-            btnSaveReview.FlatStyle = FlatStyle.Flat;
-            btnSaveReview.ForeColor = SystemColors.Window;
-            btnSaveReview.Location = new Point(21, 561);
-            btnSaveReview.Margin = new Padding(3, 4, 3, 4);
-            btnSaveReview.Name = "btnSaveReview";
-            btnSaveReview.Size = new Size(75, 32);
-            btnSaveReview.TabIndex = 36;
-            btnSaveReview.Text = "Save";
-            btnSaveReview.UseVisualStyleBackColor = false;
-            btnSaveReview.Click += btnSaveReview_Click;
+            btnSaveReviewManga.BackColor = SystemColors.ActiveCaptionText;
+            btnSaveReviewManga.Cursor = Cursors.Hand;
+            btnSaveReviewManga.FlatAppearance.BorderSize = 0;
+            btnSaveReviewManga.FlatAppearance.MouseOverBackColor = Color.DarkOrchid;
+            btnSaveReviewManga.FlatStyle = FlatStyle.Flat;
+            btnSaveReviewManga.ForeColor = SystemColors.Window;
+            btnSaveReviewManga.Location = new Point(21, 565);
+            btnSaveReviewManga.Margin = new Padding(3, 4, 3, 4);
+            btnSaveReviewManga.Name = "btnSaveReviewManga";
+            btnSaveReviewManga.Size = new Size(75, 32);
+            btnSaveReviewManga.TabIndex = 36;
+            btnSaveReviewManga.Text = "Save";
+            btnSaveReviewManga.UseVisualStyleBackColor = false;
+            btnSaveReviewManga.Click += btnSaveReview_Click;
             // 
             // btnLoadData
             // 
@@ -415,27 +367,62 @@
             btnLoadData.UseVisualStyleBackColor = false;
             btnLoadData.Click += btnLoadData_Click;
             // 
-            // Form1
+            // columnHeader1
+            // 
+            columnHeader1.Text = "Title";
+            columnHeader1.Width = 100;
+            // 
+            // columnHeader2
+            // 
+            columnHeader2.Text = "Author";
+            columnHeader2.Width = 100;
+            // 
+            // columnHeader3
+            // 
+            columnHeader3.Text = "Genre";
+            columnHeader3.Width = 100;
+            // 
+            // columnHeader4
+            // 
+            columnHeader4.Text = "Date";
+            columnHeader4.Width = 100;
+            // 
+            // columnHeader5
+            // 
+            columnHeader5.Text = "Volume";
+            columnHeader5.Width = 100;
+            // 
+            // columnHeader6
+            // 
+            columnHeader6.Text = "Editorial";
+            columnHeader6.Width = 100;
+            // 
+            // columnHeader7
+            // 
+            columnHeader7.Text = "Rating";
+            // 
+            // columnHeader8
+            // 
+            columnHeader8.Text = "Price";
+            // 
+            // FrmManga
             // 
             AutoScaleDimensions = new SizeF(9F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
             ClientSize = new Size(1233, 619);
             Controls.Add(btnLoadData);
-            Controls.Add(btnSaveReview);
+            Controls.Add(btnSaveReviewManga);
             Controls.Add(lblAddReview);
             Controls.Add(txtReview);
             Controls.Add(cbGenre);
-            Controls.Add(btnExport);
+            Controls.Add(btnExportManga);
             Controls.Add(cbEditorial);
             Controls.Add(btnDeleteManga);
-            Controls.Add(btnSaveAnime);
             Controls.Add(nudRating);
             Controls.Add(dtpDate);
-            Controls.Add(lstvData);
-            Controls.Add(btnAddAnime);
-            Controls.Add(btnAddManga);
-            Controls.Add(btnCalculateCost);
+            Controls.Add(lstvDataManga);
+            Controls.Add(btnGetStats);
             Controls.Add(lblRating);
             Controls.Add(lblPrice);
             Controls.Add(txtPrice);
@@ -451,10 +438,11 @@
             Controls.Add(txtTitle);
             Font = new Font("Microsoft Tai Le", 11F, FontStyle.Bold);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(4);
-            Name = "Form1";
+            Name = "FrmManga";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Form1";
+            Text = "Anime and Manga List";
             ((System.ComponentModel.ISupportInitialize)nudRating).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -475,20 +463,25 @@
         private Label lblPrice;
         private TextBox txtPrice;
         private Label lblRating;
-        private Button btnCalculateCost;
-        private Button btnAddManga;
-        private Button btnAddAnime;
-        private ListView lstvData;
+        private Button btnGetStats;
+        private ListView lstvDataManga;
         private DateTimePicker dtpDate;
         private NumericUpDown nudRating;
-        private Button btnSaveAnime;
         private Button btnDeleteManga;
         private ComboBox cbEditorial;
-        private Button btnExport;
+        private Button btnExportManga;
         private ComboBox cbGenre;
         private TextBox txtReview;
         private Label lblAddReview;
-        private Button btnSaveReview;
+        private Button btnSaveReviewManga;
         private Button btnLoadData;
+        private ColumnHeader columnHeader1;
+        private ColumnHeader columnHeader2;
+        private ColumnHeader columnHeader3;
+        private ColumnHeader columnHeader4;
+        private ColumnHeader columnHeader5;
+        private ColumnHeader columnHeader6;
+        private ColumnHeader columnHeader7;
+        private ColumnHeader columnHeader8;
     }
 }

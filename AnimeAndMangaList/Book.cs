@@ -21,12 +21,10 @@ namespace AnimeAndMangaList
 		}
 
         protected double price;
-
-        //PROPIEDAD DE SOLO ESCRITURA
         public double Price
         {
-            private get { return price; }
             set { price = value; }
+            get { return price; }
         }
 
         public Book()
@@ -43,18 +41,6 @@ namespace AnimeAndMangaList
 			this.price = price;
         }
 
-        //METODO QUE RECIBE Y REGRESA
-        public static double GetCollectionCost(Manga[] mangas)
-        {
-            double sumPrice = 0;
-            foreach (Manga manga in mangas)
-            {
-                if (manga != null)
-                {
-                    sumPrice += manga.price;
-                }
-            }
-            return Math.Round(sumPrice, 2);
-        }
+       
     }
 }

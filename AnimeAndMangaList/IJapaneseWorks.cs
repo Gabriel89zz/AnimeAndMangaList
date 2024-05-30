@@ -1,12 +1,11 @@
-﻿
-namespace AnimeAndMangaList
+﻿namespace AnimeAndMangaList
 {
     internal interface IJapaneseWorks
     {
         string Title { get; set; }
         string Author { get;}
         string Genre { get; set; }
-        DateTime ReleaseYear { get;}
+        DateTime ReleaseYear { get; set; }
         int Rating { get; set; }
     }
 }
