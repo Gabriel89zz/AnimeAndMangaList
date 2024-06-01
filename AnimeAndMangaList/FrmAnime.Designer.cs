@@ -62,6 +62,7 @@
             txtChaptersAnime = new TextBox();
             txtAuthorAnime = new TextBox();
             txtTitleAnime = new TextBox();
+            btnSimilarAnimes = new Button();
             ((System.ComponentModel.ISupportInitialize)nudRatingAnime).BeginInit();
             SuspendLayout();
             // 
@@ -93,20 +94,22 @@
             btnSaveReviewAnime.FlatStyle = FlatStyle.Flat;
             btnSaveReviewAnime.Font = new Font("Microsoft Tai Le", 11.25F, FontStyle.Bold);
             btnSaveReviewAnime.ForeColor = SystemColors.Window;
-            btnSaveReviewAnime.Location = new Point(21, 563);
+            btnSaveReviewAnime.Location = new Point(20, 562);
             btnSaveReviewAnime.Margin = new Padding(3, 4, 3, 4);
             btnSaveReviewAnime.Name = "btnSaveReviewAnime";
             btnSaveReviewAnime.Size = new Size(75, 32);
             btnSaveReviewAnime.TabIndex = 64;
             btnSaveReviewAnime.Text = "Save";
             btnSaveReviewAnime.UseVisualStyleBackColor = false;
+            btnSaveReviewAnime.Click += btnSaveReviewAnime_Click;
             // 
             // lblAddReview
             // 
             lblAddReview.AutoSize = true;
+            lblAddReview.Font = new Font("Microsoft Tai Le", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblAddReview.Location = new Point(21, 332);
             lblAddReview.Name = "lblAddReview";
-            lblAddReview.Size = new Size(75, 15);
+            lblAddReview.Size = new Size(100, 19);
             lblAddReview.TabIndex = 63;
             lblAddReview.Text = "Add a review";
             // 
@@ -170,7 +173,7 @@
             btnDeleteAnime.FlatStyle = FlatStyle.Flat;
             btnDeleteAnime.Font = new Font("Microsoft Tai Le", 11.25F, FontStyle.Bold);
             btnDeleteAnime.ForeColor = SystemColors.ControlLightLight;
-            btnDeleteAnime.Location = new Point(1086, 148);
+            btnDeleteAnime.Location = new Point(1086, 93);
             btnDeleteAnime.Margin = new Padding(4, 3, 4, 3);
             btnDeleteAnime.Name = "btnDeleteAnime";
             btnDeleteAnime.Size = new Size(97, 39);
@@ -189,7 +192,7 @@
             btnSaveAnime.FlatStyle = FlatStyle.Flat;
             btnSaveAnime.Font = new Font("Microsoft Tai Le", 11.25F, FontStyle.Bold);
             btnSaveAnime.ForeColor = SystemColors.ControlLightLight;
-            btnSaveAnime.Location = new Point(1086, 82);
+            btnSaveAnime.Location = new Point(1086, 27);
             btnSaveAnime.Margin = new Padding(4);
             btnSaveAnime.Name = "btnSaveAnime";
             btnSaveAnime.Size = new Size(97, 44);
@@ -278,7 +281,7 @@
             btnGetStatsAnime.FlatStyle = FlatStyle.Flat;
             btnGetStatsAnime.Font = new Font("Microsoft Tai Le", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnGetStatsAnime.ForeColor = SystemColors.ControlLightLight;
-            btnGetStatsAnime.Location = new Point(1086, 215);
+            btnGetStatsAnime.Location = new Point(1086, 160);
             btnGetStatsAnime.Margin = new Padding(4);
             btnGetStatsAnime.Name = "btnGetStatsAnime";
             btnGetStatsAnime.Size = new Size(97, 48);
@@ -411,12 +414,31 @@
             txtTitleAnime.Size = new Size(312, 26);
             txtTitleAnime.TabIndex = 38;
             // 
+            // btnSimilarAnimes
+            // 
+            btnSimilarAnimes.BackColor = SystemColors.ActiveCaptionText;
+            btnSimilarAnimes.Cursor = Cursors.Hand;
+            btnSimilarAnimes.FlatAppearance.BorderSize = 0;
+            btnSimilarAnimes.FlatAppearance.MouseOverBackColor = Color.DarkOrchid;
+            btnSimilarAnimes.FlatStyle = FlatStyle.Flat;
+            btnSimilarAnimes.Font = new Font("Microsoft Tai Le", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnSimilarAnimes.ForeColor = SystemColors.ControlLightLight;
+            btnSimilarAnimes.Location = new Point(1086, 228);
+            btnSimilarAnimes.Margin = new Padding(4);
+            btnSimilarAnimes.Name = "btnSimilarAnimes";
+            btnSimilarAnimes.Size = new Size(97, 48);
+            btnSimilarAnimes.TabIndex = 66;
+            btnSimilarAnimes.Text = "Similar Animes";
+            btnSimilarAnimes.UseVisualStyleBackColor = false;
+            btnSimilarAnimes.Click += btnSimilarAnimes_Click;
+            // 
             // FrmAnime
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonHighlight;
             ClientSize = new Size(1233, 619);
+            Controls.Add(btnSimilarAnimes);
             Controls.Add(btnLoadDataAnime);
             Controls.Add(btnSaveReviewAnime);
             Controls.Add(lblAddReview);
@@ -489,5 +511,6 @@
         private ColumnHeader columnHeader6;
         private ColumnHeader columnHeader7;
         private ColumnHeader columnHeader8;
+        private Button btnSimilarAnimes;
     }
 }

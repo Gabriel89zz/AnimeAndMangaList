@@ -1,3 +1,9 @@
+using ClosedXML.Excel;
+using Newtonsoft.Json;
+using System.Xml;
+using Xceed.Words.NET;
+using Xceed.Document.NET;
+using System.Diagnostics;
 namespace AnimeAndMangaList
 {
     public partial class FrmManga : Form
@@ -7,8 +13,8 @@ namespace AnimeAndMangaList
         public FrmManga()
         {
             InitializeComponent();
-            mangas = new Manga[50];
-            cbGenre.DataSource = Manga.GetMangaGenres();
+            mangas = new Manga[20];
+            txtPrice.ReadOnly = true;
         }
 
         private void btnSaveManga_Click(object sender, EventArgs e)
@@ -19,8 +25,7 @@ namespace AnimeAndMangaList
                     string.IsNullOrWhiteSpace(txtAuthor.Text) ||
                     string.IsNullOrWhiteSpace(cbGenre.Text) ||
                     string.IsNullOrWhiteSpace(txtChapters.Text) ||
-                    string.IsNullOrWhiteSpace(cbEditorial.Text) ||
-                    string.IsNullOrWhiteSpace(txtPrice.Text))
+                    string.IsNullOrWhiteSpace(cbEditorial.Text))
                 {
                     MessageBox.Show("All fields must be filled", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -38,18 +43,38 @@ namespace AnimeAndMangaList
                     return;
                 }
 
-                if (!double.TryParse(txtPrice.Text, out double price) || price < 0)
+                int emptyIndex = -1;
+                for (int i = 0; i < mangas.Length; i++)
                 {
-                    MessageBox.Show("Check that the price does not contain letters and that it does not contain a negative value", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    if (mangas[i] == null)
+                    {
+                        emptyIndex = i;
+                        break;
+                    }
                 }
-
-                int emptyIndex = Array.FindIndex(mangas, m => m == null);
 
                 if (emptyIndex == -1)
                 {
-                    MessageBox.Show("The array is full. You need to delete some entries to add new ones.", "Array Full", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    DialogResult result = MessageBox.Show("The array is full. Do you want to delete all entries to add new ones?",
+                                                          "Array Full", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                    if (result == DialogResult.OK)
+                    {
+                        // Clear the array
+                        for (int i = 0; i < mangas.Length; i++)
+                        {
+                            mangas[i] = null;
+                        }
+
+                        // Clear the ListView
+                        lstvDataManga.Items.Clear();
+
+                        // Set the emptyIndex to 0 since the array is now empty
+                        emptyIndex = 0;
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
 
                 mangas[emptyIndex] = new Manga(
@@ -59,8 +84,7 @@ namespace AnimeAndMangaList
                     dtpDate.Value,
                     Convert.ToInt32(txtChapters.Text),
                     cbEditorial.Text,
-                    Convert.ToInt32(nudRating.Value),
-                    Convert.ToDouble(txtPrice.Text)
+                    Convert.ToInt32(nudRating.Value)
                 );
 
                 ListViewItem item = new ListViewItem(mangas[emptyIndex].Title);
@@ -123,13 +147,34 @@ namespace AnimeAndMangaList
         {
             if (lstvDataManga.SelectedItems.Count > 0)
             {
-                for (int i = lstvDataManga.SelectedItems.Count - 1; i >= 0; i--)
+                int numberItemsSelected = lstvDataManga.SelectedItems.Count;
+                int[] selectedIndices = new int[lstvDataManga.SelectedItems.Count];
+
+                for (int i = 0; i < numberItemsSelected; i++)
                 {
-                    ListViewItem selectedManga = lstvDataManga.SelectedItems[i];
-                    int selectedIndex = selectedManga.Index;
-                    lstvDataManga.Items.RemoveAt(selectedIndex);
-                    mangas[selectedIndex] = null;
+                    selectedIndices[i] = lstvDataManga.SelectedItems[i].Index;
                 }
+
+                Array.Sort(selectedIndices);
+                Array.Reverse(selectedIndices);
+
+                for (int i = 0; i < numberItemsSelected; i++)
+                {
+                    lstvDataManga.Items.RemoveAt(selectedIndices[i]);
+                }
+
+                Manga[] updatedMangas = new Manga[mangas.Length - numberItemsSelected];
+
+                int newIndex = 0;
+                for (int i = 0; i < mangas.Length; i++)
+                {
+                    if (Array.IndexOf(selectedIndices, i) == -1)
+                    {
+                        updatedMangas[newIndex++] = mangas[i];
+                    }
+                }
+
+                mangas = updatedMangas;
 
                 MessageBox.Show("Selected mangas have been deleted.", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -149,7 +194,57 @@ namespace AnimeAndMangaList
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string filePath = openFileDialog.FileName;
-                    Manga.LoadMangaDataFromTextFile(filePath, mangas, lstvDataManga);
+                    try
+                    {
+                        string[] lines = File.ReadAllLines(filePath);
+
+                        foreach (string line in lines)
+                        {
+                            string[] fields = line.Split('|');
+                            int emptyIndex = -1;
+                            for (int i = 0; i < mangas.Length; i++)
+                            {
+                                if (mangas[i] == null)
+                                {
+                                    emptyIndex = i;
+                                    break;
+                                }
+                            }
+
+                            if (emptyIndex == -1)
+                            {
+                                MessageBox.Show("The array is full. You need to delete some entries to add new ones.", "Array Full", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                return;
+                            }
+
+                            mangas[emptyIndex] = new Manga(
+                                fields[0],
+                                fields[1],
+                                fields[2],
+                                DateTime.Parse(fields[3]),
+                                Convert.ToInt32(fields[4]),
+                                fields[5],
+                                Convert.ToInt32(fields[6])
+                            );
+
+                            ListViewItem item = new ListViewItem(mangas[emptyIndex].Title);
+                            item.SubItems.Add(mangas[emptyIndex].Author);
+                            item.SubItems.Add(mangas[emptyIndex].Genre);
+                            item.SubItems.Add(mangas[emptyIndex].ReleaseYear.ToShortDateString());
+                            item.SubItems.Add(mangas[emptyIndex].Volume.ToString());
+                            item.SubItems.Add(mangas[emptyIndex].Editorial);
+                            item.SubItems.Add(mangas[emptyIndex].Rating.ToString());
+                            item.SubItems.Add(mangas[emptyIndex].Price.ToString());
+
+                            lstvDataManga.Items.Add(item);
+                        }
+
+                        MessageBox.Show("Data loaded successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("An error occurred while loading data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }
@@ -170,19 +265,19 @@ namespace AnimeAndMangaList
                     switch (extension.ToLower())
                     {
                         case ".json":
-                            Manga.ExportMangaToJson(filePath, mangas);
+                            ExportMangaToJson(filePath);
                             break;
                         case ".xml":
-                            Manga.ExportMangaToXml(filePath, mangas);
+                            ExportMangaToXml(filePath);
                             break;
                         case ".xlsx":
-                            Manga.ExportMangaToExcel(filePath, mangas);
+                            ExportMangaToExcel(filePath);
                             break;
                         case ".docx":
-                            Manga.ExportMangaToWord(filePath, mangas);
+                            ExportMangaToWord(filePath);
                             break;
                         case ".txt":
-                            Manga.ExportMangaToTxt(filePath, mangas);
+                            ExportMangaToTxt(filePath);
                             break;
                         default:
                             MessageBox.Show("Unsupported file format selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -194,9 +289,167 @@ namespace AnimeAndMangaList
             }
         }
 
+        private void ExportMangaToJson(string filePath)
+        {
+            Manga[] filteredMangas = Array.FindAll(mangas, m => m != null);
+            string json = JsonConvert.SerializeObject(filteredMangas, Newtonsoft.Json.Formatting.Indented);
+            File.WriteAllText(filePath, json);
+
+            Process.Start(new ProcessStartInfo(filePath) { UseShellExecute = true });
+        }
+
+        private void ExportMangaToXml(string filePath)
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlElement root = doc.CreateElement("Mangas");
+            doc.AppendChild(root);
+
+            foreach (Manga manga in mangas.Where(m => m != null))
+            {
+                XmlElement mangaElement = doc.CreateElement("Manga");
+
+                XmlElement titleElement = doc.CreateElement("Title");
+                titleElement.InnerText = manga.Title;
+                mangaElement.AppendChild(titleElement);
+
+                XmlElement authorElement = doc.CreateElement("Author");
+                authorElement.InnerText = manga.Author;
+                mangaElement.AppendChild(authorElement);
+
+                XmlElement genreElement = doc.CreateElement("Genre");
+                genreElement.InnerText = manga.Genre;
+                mangaElement.AppendChild(genreElement);
+
+                XmlElement releaseYearElement = doc.CreateElement("ReleaseYear");
+                releaseYearElement.InnerText = manga.ReleaseYear.ToShortDateString();
+                mangaElement.AppendChild(releaseYearElement);
+
+                XmlElement volumeElement = doc.CreateElement("Volume");
+                volumeElement.InnerText = manga.Volume.ToString();
+                mangaElement.AppendChild(volumeElement);
+
+                XmlElement editorialElement = doc.CreateElement("Editorial");
+                editorialElement.InnerText = manga.Editorial;
+                mangaElement.AppendChild(editorialElement);
+
+                XmlElement ratingElement = doc.CreateElement("Rating");
+                ratingElement.InnerText = manga.Rating.ToString();
+                mangaElement.AppendChild(ratingElement);
+
+                XmlElement priceElement = doc.CreateElement("Price");
+                priceElement.InnerText = manga.Price.ToString();
+                mangaElement.AppendChild(priceElement);
+
+                root.AppendChild(mangaElement);
+            }
+
+            doc.Save(filePath);
+            Process.Start(new ProcessStartInfo(filePath) { UseShellExecute = true });
+
+        }
+        private void ExportMangaToExcel(string filePath)
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Mangas");
+
+                worksheet.Cell(1, 1).Value = "Title";
+                worksheet.Cell(1, 2).Value = "Author";
+                worksheet.Cell(1, 3).Value = "Genre";
+                worksheet.Cell(1, 4).Value = "ReleaseYear";
+                worksheet.Cell(1, 5).Value = "Volume";
+                worksheet.Cell(1, 6).Value = "Editorial";
+                worksheet.Cell(1, 7).Value = "Rating";
+                worksheet.Cell(1, 8).Value = "Price";
+
+                int rowIndex = 2;
+
+                foreach (Manga manga in mangas.Where(m => m != null))
+                {
+                    worksheet.Cell(rowIndex, 1).Value = manga.Title;
+                    worksheet.Cell(rowIndex, 2).Value = manga.Author;
+                    worksheet.Cell(rowIndex, 3).Value = manga.Genre;
+                    worksheet.Cell(rowIndex, 4).Value = manga.ReleaseYear.ToShortDateString();
+                    worksheet.Cell(rowIndex, 5).Value = manga.Volume;
+                    worksheet.Cell(rowIndex, 6).Value = manga.Editorial;
+                    worksheet.Cell(rowIndex, 7).Value = manga.Rating;
+                    worksheet.Cell(rowIndex, 8).Value = manga.Price;
+
+                    rowIndex++;
+                }
+
+                workbook.SaveAs(filePath);
+            }
+            Process.Start(new ProcessStartInfo(filePath) { UseShellExecute = true });
+        }
+
+
+        private void ExportMangaToWord(string filePath)
+        {
+            using (var document = DocX.Create(filePath))
+            {
+                document.InsertParagraph("Manga List").FontSize(15).Bold().Alignment = Alignment.center;
+
+                int mangaCount = mangas.Count(m => m != null);
+                Table table = document.AddTable(mangaCount + 1, 8);
+
+                table.Rows[0].Cells[0].Paragraphs[0].Append("Title");
+                table.Rows[0].Cells[1].Paragraphs[0].Append("Author");
+                table.Rows[0].Cells[2].Paragraphs[0].Append("Genre");
+                table.Rows[0].Cells[3].Paragraphs[0].Append("ReleaseYear");
+                table.Rows[0].Cells[4].Paragraphs[0].Append("Volume");
+                table.Rows[0].Cells[5].Paragraphs[0].Append("Editorial");
+                table.Rows[0].Cells[6].Paragraphs[0].Append("Rating");
+                table.Rows[0].Cells[7].Paragraphs[0].Append("Price");
+
+                int rowIndex = 1;
+                foreach (Manga manga in mangas.Where(m => m != null))
+                {
+                    table.Rows[rowIndex].Cells[0].Paragraphs[0].Append(manga.Title);
+                    table.Rows[rowIndex].Cells[1].Paragraphs[0].Append(manga.Author);
+                    table.Rows[rowIndex].Cells[2].Paragraphs[0].Append(manga.Genre);
+                    table.Rows[rowIndex].Cells[3].Paragraphs[0].Append(manga.ReleaseYear.ToShortDateString());
+                    table.Rows[rowIndex].Cells[4].Paragraphs[0].Append(manga.Volume.ToString());
+                    table.Rows[rowIndex].Cells[5].Paragraphs[0].Append(manga.Editorial);
+                    table.Rows[rowIndex].Cells[6].Paragraphs[0].Append(manga.Rating.ToString());
+                    table.Rows[rowIndex].Cells[7].Paragraphs[0].Append(manga.Price.ToString());
+                    rowIndex++;
+                }
+
+                document.InsertTable(table);
+                document.Save();
+            }
+            Process.Start(new ProcessStartInfo(filePath) { UseShellExecute = true });
+        }
+
+        private void ExportMangaToTxt(string filePath)
+        {
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                foreach (Manga manga in mangas.Where(m => m != null))
+                {
+                    writer.WriteLine(manga.ToString());
+                }
+            }
+            Process.Start(new ProcessStartInfo(filePath) { UseShellExecute = true });
+        }
+
         private void btnGetStats_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(Manga.GetStats(mangas));
+            MessageBox.Show(Manga.GetStatsManga(mangas),"Stats",MessageBoxButtons.OK,MessageBoxIcon.Information);
         }
+
+        private void btnSimilarManga_Click(object sender, EventArgs e)
+        {
+            if (lstvDataManga.SelectedIndices.Count > 0)
+            {
+                MessageBox.Show(mangas[lstvDataManga.SelectedIndices[0]].ShowSimilarWorks(),"Similar Mangas",MessageBoxButtons.OK,MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("No manga has been selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
     }
 }

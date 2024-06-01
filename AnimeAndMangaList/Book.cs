@@ -20,10 +20,10 @@ namespace AnimeAndMangaList
 			set { editorial = value; }
 		}
 
-        protected double price;
-        public double Price
+		protected double price;
+        //Propiedad de solo lectura
+		public double Price
         {
-            set { price = value; }
             get { return price; }
         }
 
@@ -31,16 +31,31 @@ namespace AnimeAndMangaList
         {
 			volume = 0;
 			editorial = "";
-			price = 0;
+			price =DeterminePrice();
         }
 
-		public Book(int chaptersnumber,string editorial,double price)
+		public Book(int volume,string editorial)
         {
-			this.volume = chaptersnumber;
+			this.volume = volume;
 			this.editorial = editorial;
-			this.price = price;
+			this.price = DeterminePrice();
         }
 
-       
+        private double DeterminePrice()
+        {
+            switch (editorial)
+            {
+                case "Panini":
+                    return 145;
+                case "Norma":
+                    return 139;
+                case "Kamite":
+                    return 189;
+                case "Ivrea":
+                    return 120;
+                default:
+                    return 100; 
+            }
+        }
     }
 }

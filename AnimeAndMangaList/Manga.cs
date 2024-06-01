@@ -4,6 +4,7 @@ using System.Xml;
 using Xceed.Words.NET;
 using Xceed.Document.NET;
 using Microsoft.DotNet.PlatformAbstractions;
+using iText.Commons.Bouncycastle.Cert.Ocsp;
 
 namespace AnimeAndMangaList
 {
@@ -22,6 +23,7 @@ namespace AnimeAndMangaList
         public string Author
         {
             get { return author; }
+            set { author = value; }
         }
 
         private string genre;
@@ -56,7 +58,7 @@ namespace AnimeAndMangaList
         }
 
         //CONSTRUCTOR CON PARAMETROS
-        public Manga(string title,string autor,string genre,DateTime releaseyear, int chaptersnumber, string editorial, int rating,double price):base(chaptersnumber,editorial,price)
+        public Manga(string title,string autor,string genre,DateTime releaseyear, int chaptersnumber, string editorial, int rating):base(chaptersnumber,editorial)
         {
             this.title = title;
             this.author = autor;
@@ -65,32 +67,29 @@ namespace AnimeAndMangaList
             this.rating = rating;
         }
 
-        //Polimorfimso
         public override string ToString()
         {
             return "Title: "+title+", Author: "+author+ ", Genre: " + genre + ", Acquisition Date: " + releaseyear+", Volume: "+volume+", Editorial: "+editorial+", Price: "+price+", Rating:"+rating;
         }
         //METODO  QUE REGRESA Y RECIBE
-        public static string GetStats(Manga[] mangas)
+        public static string GetStatsManga(Manga[] mangas)
         {
             double sumPrice = 0;
+            int Kamite = 0;
+            int Panini = 0;
+            int Ivrea = 0;
+            int Norma = 0;
+            int shonen = 0;
+            int seinen = 0;
+            int comedy = 0;
+            int scifi = 0;
+            int romcom = 0;
+            int isekai = 0;
             foreach (Manga manga in mangas)
             {
                 if (manga != null)
                 {
                     sumPrice += manga.price;
-                }
-            }
-
-            int Kamite = 0;
-            int Panini = 0;
-            int Ivrea = 0;
-            int Norma = 0;
-
-            foreach (var manga in mangas)
-            {
-                if (manga != null)
-                {
                     switch (manga.editorial)
                     {
                         case "Panini":
@@ -100,214 +99,159 @@ namespace AnimeAndMangaList
                             Norma++;
                             break;
                         case "Ivrea":
-                           Ivrea++;
+                            Ivrea++;
                             break;
                         case "Kamite":
-                             Kamite++;
+                            Kamite++;
+                            break;
+                        default:
+                            continue;
+                    }
+
+                    switch (manga.genre)
+                    {
+                        case "Shonen":
+                            shonen++;
+                            break;
+                        case "Seinen":
+                            seinen++;
+                            break;
+                        case "Comedy":
+                            comedy++;
+                            break;
+                        case "Sci-Fi":
+                            scifi++;
+                            break; 
+                        case "Romcom":
+                            romcom++;
+                            break;
+                        case "Isekai":
+                            isekai++;
                             break;
                         default:
                             continue;
                     }
                 }
             }
-            return "The ost of your collection of mangas: " + Math.Round(sumPrice, 2) + "\nMangas by editorial: Panini:" + Panini + "Norma: " + Norma + " Kamite: " + Kamite + " Ivrea: " + Ivrea;
+            return "The ost of your collection of mangas: " + Math.Round(sumPrice, 2)+" MXN"+"\n\nMangas by editorial: \nPanini:" + Panini + "\nNorma: " + Norma + "\nKamite: " + Kamite + "\nIvrea: "+Ivrea+
+                "\n\nMangas by genre: \nShonen: "+shonen+"\nSeinen: "+seinen+"\nComedy: "+comedy+"\nSci-Fi: "+scifi+"\nRomcom: "+romcom+"\nIsekai: "+isekai;
         }
 
-        // METODO QUE REGRESA PERO NO RECIBE
-        public static String[] GetMangaGenres()
+        //METODO QUE REGRESA PERO NO RECIBE
+        public string ShowSimilarWorks()
         {
-            String[] MangaGenres = { "Shonen","Seinen","Comedy","Drama","Sci-Fi","Romcom","Slice of Life","Isekai" };
-            return MangaGenres;
-        }
-
-        //METODO QUE RECIBE PERO NO REGRESA
-        public static void ExportMangaToJson(string filePath, Manga[]mangas)
-        {
-            Manga[] filteredMangas = Array.FindAll(mangas, m => m != null);
-            string json = JsonConvert.SerializeObject(filteredMangas, Newtonsoft.Json.Formatting.Indented);
-            File.WriteAllText(filePath, json);
-        }
-
-        public static void ExportMangaToXml(string filePath, Manga[] mangas)
-        {
-            XmlDocument doc = new XmlDocument();
-            XmlElement root = doc.CreateElement("Mangas");
-            doc.AppendChild(root);
-
-            foreach (var manga in mangas.Where(m => m != null))
+            string similarWorksMessage = "";
+           
+            switch (genre)
             {
-                XmlElement mangaElement = doc.CreateElement("Manga");
+                case "Shonen":
+                    string[] shonenGenre = {"One Piece", "Naruto", "Bleach", "Black Clover", "Fairy Tail",
+                    "Dragon Ball", "My Hero Academia", "Attack on Titan", "Hunter x Hunter", "Demon Slayer",
+                    "One Punch Man", "Haikyuu!!", "Yu Yu Hakusho", "The Seven Deadly Sins", "JoJo's Bizarre Adventure",
+                    "Fullmetal Alchemist", "Mob Psycho 100", "Tokyo Ghoul", "Assassination Classroom", "Dragon Ball Z"};
 
-                XmlElement titleElement = doc.CreateElement("Title");
-                titleElement.InnerText = manga.title;
-                mangaElement.AppendChild(titleElement);
-
-                XmlElement authorElement = doc.CreateElement("Author");
-                authorElement.InnerText = manga.author;
-                mangaElement.AppendChild(authorElement);
-
-                XmlElement genreElement = doc.CreateElement("Genre");
-                genreElement.InnerText = manga.genre;
-                mangaElement.AppendChild(genreElement);
-
-                XmlElement releaseYearElement = doc.CreateElement("ReleaseYear");
-                releaseYearElement.InnerText = manga.releaseyear.ToShortDateString();
-                mangaElement.AppendChild(releaseYearElement);
-
-                XmlElement volumeElement = doc.CreateElement("Volume");
-                volumeElement.InnerText = manga.volume.ToString();
-                mangaElement.AppendChild(volumeElement);
-
-                XmlElement editorialElement = doc.CreateElement("Editorial");
-                editorialElement.InnerText = manga.editorial;
-                mangaElement.AppendChild(editorialElement);
-
-                XmlElement ratingElement = doc.CreateElement("Rating");
-                ratingElement.InnerText = manga.rating.ToString();
-                mangaElement.AppendChild(ratingElement);
-
-                XmlElement priceElement = doc.CreateElement("Price");
-                priceElement.InnerText = manga.price.ToString();
-                mangaElement.AppendChild(priceElement);
-
-                root.AppendChild(mangaElement);
-            }
-
-            doc.Save(filePath);
-
-        }
-        public static void ExportMangaToExcel(string filePath, Manga[] mangas)
-        {
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.Worksheets.Add("Mangas");
-
-                worksheet.Cell(1, 1).Value = "Title";
-                worksheet.Cell(1, 2).Value = "Author";
-                worksheet.Cell(1, 3).Value = "Genre";
-                worksheet.Cell(1, 4).Value = "ReleaseYear";
-                worksheet.Cell(1, 5).Value = "Volume";
-                worksheet.Cell(1, 6).Value = "Editorial";
-                worksheet.Cell(1, 7).Value = "Rating";
-                worksheet.Cell(1, 8).Value = "Price";
-
-                int rowIndex = 2;
-
-                foreach (var manga in mangas.Where(m => m != null))
-                {
-                    worksheet.Cell(rowIndex, 1).Value = manga.title;
-                    worksheet.Cell(rowIndex, 2).Value = manga.author;
-                    worksheet.Cell(rowIndex, 3).Value = manga.genre;
-                    worksheet.Cell(rowIndex, 4).Value = manga.releaseyear.ToShortDateString();
-                    worksheet.Cell(rowIndex, 5).Value = manga.volume;
-                    worksheet.Cell(rowIndex, 6).Value = manga.editorial;
-                    worksheet.Cell(rowIndex, 7).Value = manga.rating;
-                    worksheet.Cell(rowIndex, 8).Value = manga.price;
-
-                    rowIndex++;
-                }
-
-                workbook.SaveAs(filePath);
-            }
-        }
-
-
-        public static void ExportMangaToWord(string filePath, Manga[] mangas)
-        {
-            using (var document = DocX.Create(filePath))
-            {
-                document.InsertParagraph("Manga List").FontSize(15).Bold().Alignment = Alignment.center;
-
-                var mangaCount = mangas.Count(m => m != null);
-                var table = document.AddTable(mangaCount + 1, 8);
-
-                table.Rows[0].Cells[0].Paragraphs[0].Append("Title");
-                table.Rows[0].Cells[1].Paragraphs[0].Append("Author");
-                table.Rows[0].Cells[2].Paragraphs[0].Append("Genre");
-                table.Rows[0].Cells[3].Paragraphs[0].Append("ReleaseYear");
-                table.Rows[0].Cells[4].Paragraphs[0].Append("Volume");
-                table.Rows[0].Cells[5].Paragraphs[0].Append("Editorial");
-                table.Rows[0].Cells[6].Paragraphs[0].Append("Rating");
-                table.Rows[0].Cells[7].Paragraphs[0].Append("Price");
-
-                int rowIndex = 1;
-                foreach (var manga in mangas.Where(m => m != null))
-                {
-                    table.Rows[rowIndex].Cells[0].Paragraphs[0].Append(manga.title);
-                    table.Rows[rowIndex].Cells[1].Paragraphs[0].Append(manga.author);
-                    table.Rows[rowIndex].Cells[2].Paragraphs[0].Append(manga.genre);
-                    table.Rows[rowIndex].Cells[3].Paragraphs[0].Append(manga.releaseyear.ToShortDateString());
-                    table.Rows[rowIndex].Cells[4].Paragraphs[0].Append(manga.volume.ToString());
-                    table.Rows[rowIndex].Cells[5].Paragraphs[0].Append(manga.editorial);
-                    table.Rows[rowIndex].Cells[6].Paragraphs[0].Append(manga.rating.ToString());
-                    table.Rows[rowIndex].Cells[7].Paragraphs[0].Append(manga.price.ToString());
-                    rowIndex++;
-                }
-
-                document.InsertTable(table);
-                document.Save();
-            }
-
-        }
-
-        public static void ExportMangaToTxt(string filePath, Manga[] mangas)
-        {
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                foreach (var manga in mangas.Where(m => m != null))
-                {
-                    writer.WriteLine(manga.ToString());
-                }
-            }
-        }
-
-        public static void LoadMangaDataFromTextFile(string filePath, Manga[] mangas, ListView lstvData)
-        {
-            try
-            {
-                string[] lines = File.ReadAllLines(filePath);
-
-                foreach (string line in lines)
-                {
-                    string[] fields = line.Split('|');
-
-                    int emptyIndex = Array.FindIndex(mangas, m => m == null);
-
-                    if (emptyIndex == -1)
+                    for (int i = 0; i < shonenGenre.Length; i++)
                     {
-                        MessageBox.Show("The array is full. You need to delete some entries to add new ones.", "Array Full", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
+                        if (title == shonenGenre[i])
+                        {
+                            shonenGenre[i] = "";
+                        }
+                        else
+                        {
+                            similarWorksMessage += shonenGenre[i] + "\n";
+                        }
                     }
-
-                    mangas[emptyIndex] = new Manga(
-                        fields[0],
-                        fields[1],
-                        fields[2],
-                        DateTime.Parse(fields[3]),
-                        Convert.ToInt32(fields[4]),
-                        fields[5],
-                        Convert.ToInt32(fields[6]),
-                        Convert.ToDouble(fields[7])
-                    );
-
-                    ListViewItem item = new ListViewItem(mangas[emptyIndex].title);
-                    item.SubItems.Add(mangas[emptyIndex].author);
-                    item.SubItems.Add(mangas[emptyIndex].genre);
-                    item.SubItems.Add(mangas[emptyIndex].releaseyear.ToShortDateString());
-                    item.SubItems.Add(mangas[emptyIndex].volume.ToString());
-                    item.SubItems.Add(mangas[emptyIndex].editorial);
-                    item.SubItems.Add(mangas[emptyIndex].rating.ToString());
-                    item.SubItems.Add(mangas[emptyIndex].price.ToString());
-
-                    lstvData.Items.Add(item);
-                }
-
-                MessageBox.Show("Data loaded successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    break;
+                case "Seinen":
+                    string[] seinenGenre = {
+                    "Tokyo Ghoul", "Attack on Titan", "Death Note", "Berserk", "Monster",
+                    "Parasyte", "Elfen Lied", "Akira", "Claymore", "Psycho-Pass",
+                    "Vinland Saga", "Neon Genesis Evangelion", "The Promised Neverland", "Gantz", "Black Lagoon",
+                    "Hellsing", "Vagabond", "Blame!", "Deadman Wonderland", "Dorohedoro"};
+                    for (int i = 0; i < seinenGenre.Length; i++)
+                    {
+                        if (title == seinenGenre[i])
+                        {
+                            seinenGenre[i] = "";
+                        }
+                        else
+                        {
+                            similarWorksMessage += seinenGenre[i] + "\n";
+                        }
+                    }
+                    break;
+                case "Comedey":
+                    string[] comedyGenre = {"Gintama", "Nichijou", "One Punch Man", "Konosuba", "Grand Blue",
+                    "Daily Lives of High School Boys", "The Disastrous Life of Saiki K.", "KonoSuba: God's Blessing on This Wonderful World!", "Great Teacher Onizuka", "Arakawa Under the Bridge",
+                    "Nichibros", "Prison School", "Danshi Koukousei no Nichijou", "Azumanga Daioh", "K-On!",
+                    "Cromartie High School", "Sakamoto desu ga?", "Seto no Hanayome", "Shimoneta", "Lucky Star"};
+                    for (int i = 0; i < comedyGenre.Length; i++)
+                    {
+                        if (title == comedyGenre[i])
+                        {
+                            comedyGenre[i] = "";
+                        }
+                        else
+                        {
+                            similarWorksMessage += comedyGenre[i] + "\n";
+                        }
+                    }
+                    break;
+                case "Sci-Fi":
+                    string[] scifiGenre = {"Steins;Gate", "Ghost in the Shell", "Cowboy Bebop", "Neon Genesis Evangelion", "Psycho-Pass",
+                    "Serial Experiments Lain", "Trigun", "Planetes", "Aldnoah.Zero", "Ergo Proxy",
+                    "Legend of the Galactic Heroes", "Texhnolyze", "No. 6", "Outlaw Star", "Space Dandy",
+                    "Astra Lost in Space", "Mobile Suit Gundam", "Robotech", "Armitage III", "Blue Gender" };
+                    for (int i = 0; i < scifiGenre.Length; i++)
+                    {
+                        if (title == scifiGenre[i])
+                        {
+                            scifiGenre[i] = "";
+                        }
+                        else
+                        {
+                            similarWorksMessage += scifiGenre[i] + "\n";
+                        }
+                    }
+                    break;
+                case "Romcom":
+                    string[] romcomGenre = {"Toradora!", "My Youth Romantic Comedy Is Wrong, As I Expected", "Love, Chunibyo & Other Delusions", "Nisekoi", "Golden Time",
+                    "Ore Monogatari!!", "Sakurasou no Pet na Kanojo", "Clannad", "Lovely★Complex", "Kaguya-sama: Love is War",
+                    "The Pet Girl of Sakurasou", "Monthly Girls' Nozaki-kun", "The Quintessential Quintuplets", "My Little Monster", "School Rumble",
+                    "Love Hina", "Kimi ni Todoke", "Tonikaku Kawaii", "Ouran High School Host Club", "Kaichou wa Maid-sama!" };
+                    for (int i = 0; i < romcomGenre.Length; i++)
+                    {
+                        if (title == romcomGenre[i])
+                        {
+                            romcomGenre[i] = "";
+                        }
+                        else
+                        {
+                            similarWorksMessage += romcomGenre[i] + "\n";
+                        }
+                    }
+                    break;
+                case "Isekai":
+                    string[] isekaiGenre = {"Re:Zero", "Sword Art Online", "Overlord", "The Rising of the Shield Hero", "Log Horizon",
+                    "No Game No Life", "That Time I Got Reincarnated as a Slime", "Konosuba", "The Devil is a Part-Timer!", "Grimgar, Ashes and Illusions",
+                    "In Another World with My Smartphone", "The Saga of Tanya the Evil", "The Familiar of Zero", "Gate: Thus the JSDF Fought There!", "Isekai Quartet",
+                    "Accel World", "Problem Children Are Coming from Another World, Aren't They?", "Digimon Adventure", "Restaurant to Another World", "How Not to Summon a Demon Lord"};
+                    for (int i = 0; i < isekaiGenre.Length; i++)
+                    {
+                        if (title == isekaiGenre[i])
+                        {
+                            isekaiGenre[i] = "";
+                        }
+                        else
+                        {
+                            similarWorksMessage += isekaiGenre[i] + "\n";
+                        }
+                    }
+                    break;
+                default:
+                    return "Gender not specified";
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("An error occurred while loading data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            return similarWorksMessage;
         }
     }
 
