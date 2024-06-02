@@ -68,7 +68,7 @@
             // 
             // btnSaveManga
             // 
-            btnSaveManga.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            btnSaveManga.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnSaveManga.BackColor = SystemColors.ActiveCaptionText;
             btnSaveManga.FlatAppearance.BorderColor = SystemColors.WindowText;
             btnSaveManga.FlatAppearance.BorderSize = 0;
@@ -86,7 +86,7 @@
             // 
             // btnGetStats
             // 
-            btnGetStats.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            btnGetStats.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnGetStats.BackColor = SystemColors.ActiveCaptionText;
             btnGetStats.Cursor = Cursors.Hand;
             btnGetStats.FlatAppearance.BorderSize = 0;
@@ -105,7 +105,7 @@
             // 
             // lstvDataManga
             // 
-            lstvDataManga.Anchor = AnchorStyles.Right;
+            lstvDataManga.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             lstvDataManga.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3, columnHeader4, columnHeader5, columnHeader6, columnHeader7, columnHeader8 });
             lstvDataManga.FullRowSelect = true;
             lstvDataManga.Location = new Point(364, 291);
@@ -156,7 +156,7 @@
             // 
             // btnDeleteManga
             // 
-            btnDeleteManga.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            btnDeleteManga.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnDeleteManga.BackColor = SystemColors.ActiveCaptionText;
             btnDeleteManga.Cursor = Cursors.Hand;
             btnDeleteManga.FlatAppearance.BorderSize = 0;
@@ -174,7 +174,7 @@
             // 
             // btnExportManga
             // 
-            btnExportManga.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            btnExportManga.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnExportManga.BackColor = SystemColors.ActiveCaptionText;
             btnExportManga.Cursor = Cursors.Hand;
             btnExportManga.FlatAppearance.BorderSize = 0;
@@ -192,7 +192,7 @@
             // 
             // txtReview
             // 
-            txtReview.Anchor = AnchorStyles.Left;
+            txtReview.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             txtReview.Font = new Font("Microsoft Tai Le", 10F, FontStyle.Bold);
             txtReview.Location = new Point(21, 356);
             txtReview.Margin = new Padding(3, 4, 3, 4);
@@ -204,7 +204,7 @@
             // 
             // lblAddReview
             // 
-            lblAddReview.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            lblAddReview.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             lblAddReview.AutoSize = true;
             lblAddReview.Location = new Point(21, 333);
             lblAddReview.Name = "lblAddReview";
@@ -214,7 +214,7 @@
             // 
             // btnSaveReviewManga
             // 
-            btnSaveReviewManga.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            btnSaveReviewManga.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnSaveReviewManga.BackColor = SystemColors.ActiveCaptionText;
             btnSaveReviewManga.Cursor = Cursors.Hand;
             btnSaveReviewManga.FlatAppearance.BorderSize = 0;
@@ -232,7 +232,6 @@
             // 
             // btnLoadData
             // 
-            btnLoadData.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             btnLoadData.BackColor = SystemColors.ActiveCaptionText;
             btnLoadData.BackgroundImageLayout = ImageLayout.Zoom;
             btnLoadData.Cursor = Cursors.Hand;
@@ -251,7 +250,7 @@
             // 
             // btnSimilarManga
             // 
-            btnSimilarManga.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            btnSimilarManga.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnSimilarManga.BackColor = SystemColors.ActiveCaptionText;
             btnSimilarManga.FlatAppearance.BorderSize = 0;
             btnSimilarManga.FlatAppearance.MouseDownBackColor = Color.Transparent;
@@ -268,7 +267,7 @@
             // 
             // txtTitle
             // 
-            txtTitle.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            txtTitle.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             txtTitle.Font = new Font("Microsoft Tai Le", 11F);
             txtTitle.Location = new Point(197, 83);
             txtTitle.Margin = new Padding(4);
@@ -278,7 +277,7 @@
             // 
             // txtAuthor
             // 
-            txtAuthor.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            txtAuthor.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             txtAuthor.Font = new Font("Microsoft Tai Le", 11F);
             txtAuthor.Location = new Point(197, 138);
             txtAuthor.Margin = new Padding(4);
@@ -288,7 +287,7 @@
             // 
             // txtChapters
             // 
-            txtChapters.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            txtChapters.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             txtChapters.Font = new Font("Microsoft Tai Le", 11F);
             txtChapters.Location = new Point(705, 83);
             txtChapters.Margin = new Padding(4);
@@ -298,7 +297,7 @@
             // 
             // lblTitle
             // 
-            lblTitle.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            lblTitle.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             lblTitle.AutoSize = true;
             lblTitle.Font = new Font("Microsoft Tai Le", 11F, FontStyle.Bold);
             lblTitle.Location = new Point(40, 83);
@@ -310,7 +309,7 @@
             // 
             // lblAuthor
             // 
-            lblAuthor.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            lblAuthor.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             lblAuthor.AutoSize = true;
             lblAuthor.Font = new Font("Microsoft Tai Le", 11F, FontStyle.Bold);
             lblAuthor.Location = new Point(40, 140);
@@ -322,7 +321,7 @@
             // 
             // lblGenre
             // 
-            lblGenre.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            lblGenre.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             lblGenre.AutoSize = true;
             lblGenre.Font = new Font("Microsoft Tai Le", 11F, FontStyle.Bold);
             lblGenre.Location = new Point(40, 197);
@@ -334,7 +333,7 @@
             // 
             // lblDate
             // 
-            lblDate.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            lblDate.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             lblDate.AutoSize = true;
             lblDate.Font = new Font("Microsoft Tai Le", 11F, FontStyle.Bold);
             lblDate.Location = new Point(40, 254);
@@ -346,7 +345,7 @@
             // 
             // lblChapters
             // 
-            lblChapters.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            lblChapters.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             lblChapters.AutoSize = true;
             lblChapters.Font = new Font("Microsoft Tai Le", 11F, FontStyle.Bold);
             lblChapters.Location = new Point(547, 82);
@@ -358,7 +357,7 @@
             // 
             // dtpDate
             // 
-            dtpDate.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            dtpDate.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             dtpDate.Font = new Font("Microsoft Tai Le", 11F);
             dtpDate.Format = DateTimePickerFormat.Short;
             dtpDate.Location = new Point(197, 248);
@@ -369,7 +368,7 @@
             // 
             // lblEditorial
             // 
-            lblEditorial.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            lblEditorial.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             lblEditorial.AutoSize = true;
             lblEditorial.Font = new Font("Microsoft Tai Le", 11F, FontStyle.Bold);
             lblEditorial.Location = new Point(547, 139);
@@ -381,7 +380,7 @@
             // 
             // txtPrice
             // 
-            txtPrice.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            txtPrice.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             txtPrice.Font = new Font("Microsoft Tai Le", 11F);
             txtPrice.Location = new Point(705, 225);
             txtPrice.Margin = new Padding(4);
@@ -392,7 +391,7 @@
             // 
             // lblPrice
             // 
-            lblPrice.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            lblPrice.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             lblPrice.AutoSize = true;
             lblPrice.Font = new Font("Microsoft Tai Le", 11F, FontStyle.Bold);
             lblPrice.Location = new Point(547, 232);
@@ -405,7 +404,7 @@
             // 
             // lblRating
             // 
-            lblRating.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            lblRating.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             lblRating.AutoSize = true;
             lblRating.Font = new Font("Microsoft Tai Le", 11F, FontStyle.Bold);
             lblRating.Location = new Point(547, 196);
@@ -417,7 +416,7 @@
             // 
             // nudRating
             // 
-            nudRating.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            nudRating.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             nudRating.Font = new Font("Microsoft Tai Le", 11F);
             nudRating.Location = new Point(705, 188);
             nudRating.Margin = new Padding(4, 3, 4, 3);
@@ -428,7 +427,7 @@
             // 
             // cbEditorial
             // 
-            cbEditorial.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            cbEditorial.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             cbEditorial.Font = new Font("Microsoft Tai Le", 11F);
             cbEditorial.FormattingEnabled = true;
             cbEditorial.Items.AddRange(new object[] { "Panini", "Ivrea", "Norma", "Kamite" });
@@ -440,7 +439,7 @@
             // 
             // cbGenre
             // 
-            cbGenre.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            cbGenre.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             cbGenre.Font = new Font("Microsoft Tai Le", 11F);
             cbGenre.FormattingEnabled = true;
             cbGenre.Items.AddRange(new object[] { "Shonen", "Seinen", "Comedy", "Drama", "Sci-Fi", "Romcom", "Slice of Life", "Isekai" });

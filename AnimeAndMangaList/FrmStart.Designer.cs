@@ -40,13 +40,14 @@
             // 
             // btnAddManga
             // 
+            btnAddManga.Anchor = AnchorStyles.Left;
             btnAddManga.BackColor = Color.DarkOrchid;
             btnAddManga.FlatAppearance.BorderSize = 0;
             btnAddManga.FlatAppearance.MouseOverBackColor = SystemColors.ActiveCaptionText;
             btnAddManga.FlatStyle = FlatStyle.Flat;
             btnAddManga.Font = new Font("Microsoft Tai Le", 21.75F, FontStyle.Bold);
             btnAddManga.ForeColor = SystemColors.ButtonHighlight;
-            btnAddManga.Location = new Point(102, 184);
+            btnAddManga.Location = new Point(111, 152);
             btnAddManga.Name = "btnAddManga";
             btnAddManga.Size = new Size(262, 105);
             btnAddManga.TabIndex = 0;
@@ -56,13 +57,14 @@
             // 
             // btnAddAnime
             // 
+            btnAddAnime.Anchor = AnchorStyles.Right;
             btnAddAnime.BackColor = Color.DarkOrchid;
             btnAddAnime.FlatAppearance.BorderSize = 0;
             btnAddAnime.FlatAppearance.MouseOverBackColor = SystemColors.ActiveCaptionText;
             btnAddAnime.FlatStyle = FlatStyle.Flat;
             btnAddAnime.Font = new Font("Microsoft Tai Le", 21.75F, FontStyle.Bold);
             btnAddAnime.ForeColor = SystemColors.ButtonHighlight;
-            btnAddAnime.Location = new Point(417, 184);
+            btnAddAnime.Location = new Point(426, 152);
             btnAddAnime.Name = "btnAddAnime";
             btnAddAnime.Size = new Size(262, 105);
             btnAddAnime.TabIndex = 1;
@@ -72,9 +74,10 @@
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             label1.AutoSize = true;
             label1.Font = new Font("Tahoma", 30F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(10, 45);
+            label1.Location = new Point(10, 9);
             label1.Name = "label1";
             label1.Size = new Size(778, 48);
             label1.TabIndex = 2;
@@ -82,21 +85,23 @@
             // 
             // pictureBox1
             // 
+            pictureBox1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
             pictureBox1.InitialImage = null;
-            pictureBox1.Location = new Point(10, 295);
+            pictureBox1.Location = new Point(10, 261);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(136, 147);
+            pictureBox1.Size = new Size(172, 187);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 3;
             pictureBox1.TabStop = false;
             // 
             // pictureBox2
             // 
+            pictureBox2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
-            pictureBox2.Location = new Point(684, 295);
+            pictureBox2.Location = new Point(587, 261);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(114, 153);
+            pictureBox2.Size = new Size(206, 187);
             pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox2.TabIndex = 4;
             pictureBox2.TabStop = false;
