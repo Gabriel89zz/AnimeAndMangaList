@@ -487,7 +487,7 @@
             Margin = new Padding(4);
             Name = "FrmManga";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Anime and Manga List";
+            Text = "Manga";
             ((System.ComponentModel.ISupportInitialize)nudRating).EndInit();
             ResumeLayout(false);
             PerformLayout();

@@ -15,7 +15,7 @@ namespace AnimeAndMangaList
         public FrmAnime()
         {
             InitializeComponent();
-            animes = new Anime[50];
+            animes = new Anime[30];
         }
 
         private void btnSaveAnime_Click(object sender, EventArgs e)

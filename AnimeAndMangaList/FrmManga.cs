@@ -9,12 +9,10 @@ namespace AnimeAndMangaList
     public partial class FrmManga : Form
     {
         Manga[] mangas;
-
         public FrmManga()
         {
             InitializeComponent();
-            mangas = new Manga[20];
-            txtPrice.ReadOnly = true;
+            mangas = new Manga[30];
         }
 
         private void btnSaveManga_Click(object sender, EventArgs e)
@@ -153,7 +151,7 @@ namespace AnimeAndMangaList
 
                 Array.Sort(selectedIndices);
                 Array.Reverse(selectedIndices);
-
+                    
                 for (int i = 0; i < numberItemsSelected; i++)
                 {
                     lstvDataManga.Items.RemoveAt(selectedIndices[i]);
@@ -437,9 +435,13 @@ namespace AnimeAndMangaList
 
         private void btnSimilarManga_Click(object sender, EventArgs e)
         {
-            if (lstvDataManga.SelectedIndices.Count > 0)
+            if (lstvDataManga.SelectedIndices.Count ==1)
             {
                 MessageBox.Show(mangas[lstvDataManga.SelectedIndices[0]].ShowSimilarWorks(),"Similar Mangas",MessageBoxButtons.OK,MessageBoxIcon.Information);
+            }
+            else if (lstvDataManga.SelectedIndices.Count>1)
+            {
+                MessageBox.Show("You can only select one manga.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {

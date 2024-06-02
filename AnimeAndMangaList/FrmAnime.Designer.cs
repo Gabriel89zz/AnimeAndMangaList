@@ -493,7 +493,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "FrmAnime";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "FrmAnime";
+            Text = "Anime";
             ((System.ComponentModel.ISupportInitialize)nudRatingAnime).EndInit();
             ResumeLayout(false);
             PerformLayout();
