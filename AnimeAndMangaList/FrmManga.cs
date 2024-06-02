@@ -59,16 +59,12 @@ namespace AnimeAndMangaList
                                                           "Array Full", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
                     if (result == DialogResult.OK)
                     {
-                        // Clear the array
                         for (int i = 0; i < mangas.Length; i++)
                         {
                             mangas[i] = null;
                         }
-
-                        // Clear the ListView
                         lstvDataManga.Items.Clear();
 
-                        // Set the emptyIndex to 0 since the array is now empty
                         emptyIndex = 0;
                     }
                     else
