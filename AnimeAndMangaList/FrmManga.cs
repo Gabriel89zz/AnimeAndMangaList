@@ -343,9 +343,9 @@ namespace AnimeAndMangaList
         }
         private void ExportMangaToExcel(string filePath)
         {
-            using (var workbook = new XLWorkbook())
+            using (XLWorkbook workbook = new XLWorkbook())
             {
-                var worksheet = workbook.Worksheets.Add("Mangas");
+                IXLWorksheet worksheet = workbook.Worksheets.Add("Mangas");
 
                 worksheet.Cell(1, 1).Value = "Title";
                 worksheet.Cell(1, 2).Value = "Author";
@@ -380,7 +380,7 @@ namespace AnimeAndMangaList
 
         private void ExportMangaToWord(string filePath)
         {
-            using (var document = DocX.Create(filePath))
+            using (DocX document = DocX.Create(filePath))
             {
                 document.InsertParagraph("Manga List").FontSize(15).Bold().Alignment = Alignment.center;
 

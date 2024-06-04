@@ -281,9 +281,9 @@ namespace AnimeAndMangaList
 
         private void ExportAnimeToExcel(string filePath)
         {
-            using (var workbook = new XLWorkbook())
+            using (XLWorkbook workbook = new XLWorkbook())
             {
-                var worksheet = workbook.Worksheets.Add("Animes");
+                IXLWorksheet worksheet = workbook.Worksheets.Add("Animes");
 
                 worksheet.Cell(1, 1).Value = "Title";
                 worksheet.Cell(1, 2).Value = "Author";
