@@ -132,7 +132,7 @@
             cbGenreAnime.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             cbGenreAnime.Font = new Font("Microsoft Tai Le", 11F);
             cbGenreAnime.FormattingEnabled = true;
-            cbGenreAnime.Items.AddRange(new object[] { "Shonen", "Seinen", "Romcom", "Shojo", "Science fiction", "Comedy" });
+            cbGenreAnime.Items.AddRange(new object[] { "Shonen", "Seinen", "Comedy", "Sci-Fi", "Romcom", "Isekai" });
             cbGenreAnime.Location = new Point(197, 192);
             cbGenreAnime.Margin = new Padding(3, 4, 3, 4);
             cbGenreAnime.Name = "cbGenreAnime";

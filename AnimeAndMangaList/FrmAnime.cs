@@ -387,7 +387,7 @@ namespace AnimeAndMangaList
                     lstvDataAnime.Items.RemoveAt(selectedIndices[i]);
                 }
 
-                Anime[] updatedAnimes = new Anime[animes.Length - numberItemsSelected];
+                Anime[] updatedAnimes = new Anime[animes.Length];
 
                 int newIndex = 0;
                 for (int i = 0; i < animes.Length; i++)
