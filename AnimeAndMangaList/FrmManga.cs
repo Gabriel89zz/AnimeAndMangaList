@@ -4,6 +4,7 @@ using System.Xml;
 using Xceed.Words.NET;
 using Xceed.Document.NET;
 using System.Diagnostics;
+
 namespace AnimeAndMangaList
 {
     public partial class FrmManga : Form
@@ -37,7 +38,7 @@ namespace AnimeAndMangaList
 
                 if (!int.TryParse(txtChapters.Text, out int chapters) || chapters < 0)
                 {
-                    MessageBox.Show("Chapters must be a non-negative integer", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("The volume must be a number and must not be negative", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -91,7 +92,14 @@ namespace AnimeAndMangaList
                 item.SubItems.Add(mangas[emptyIndex].Price.ToString());
 
                 lstvDataManga.Items.Add(item);
-                ClearInputs();
+                txtAuthor.Text = "";
+                txtChapters.Text = "";
+                cbGenre.Text = "";
+                txtPrice.Text = "";
+                txtTitle.Text = "";
+                nudRating.Value = 0;
+                dtpDate.Value = DateTime.Now;
+                cbEditorial.Text = "";
             }
             catch (Exception ex)
             {
@@ -99,18 +107,6 @@ namespace AnimeAndMangaList
             }
         }
 
-        //METODO QUE NO RECIBE NI REGRESA
-        private void ClearInputs()
-        {
-            txtAuthor.Text = "";
-            txtChapters.Text = "";
-            cbGenre.Text = "";
-            txtPrice.Text = "";
-            txtTitle.Text = "";
-            nudRating.Value = 0;
-            dtpDate.Value = DateTime.Now;
-            cbEditorial.Text = "";
-        }
 
         private void btnSaveReview_Click(object sender, EventArgs e)
         {

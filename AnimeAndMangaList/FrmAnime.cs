@@ -97,23 +97,18 @@ namespace AnimeAndMangaList
                 item.SubItems.Add(animes[emptyIndex].Rating.ToString());
 
                 lstvDataAnime.Items.Add(item);
-                ClearInputsAnime();
+                txtAuthorAnime.Text = "";
+                txtChaptersAnime.Text = "";
+                cbPlataform.Text = "";
+                txtProductionStudio.Text = "";
+                txtTitleAnime.Text = "";
+                nudRatingAnime.Value = 0;
+                dtpDateAnime.Value = DateTime.Now;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void ClearInputsAnime()
-        {
-            txtAuthorAnime.Text = "";
-            txtChaptersAnime.Text = "";
-            cbPlataform.Text = "";
-            txtProductionStudio.Text = "";
-            txtTitleAnime.Text = "";
-            nudRatingAnime.Value = 0;
-            dtpDateAnime.Value = DateTime.Now;
         }
         private void btnLoadDataAnime_Click(object sender, EventArgs e)
         {
@@ -442,7 +437,7 @@ namespace AnimeAndMangaList
         {
             if (lstvDataAnime.SelectedIndices.Count > 0)
             {
-                MessageBox.Show(animes[lstvDataAnime.SelectedIndices[0]].ShowSimilarWorks(), "Similar Mangas", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(animes[lstvDataAnime.SelectedIndices[0]].ShowSimilarWorks(), "Similar Animes", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {

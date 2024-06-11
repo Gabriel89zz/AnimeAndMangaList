@@ -1,6 +1,4 @@
-﻿
-
-namespace AnimeAndMangaList
+﻿namespace AnimeAndMangaList
 {
     internal class Book
     {
